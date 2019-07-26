@@ -9,7 +9,8 @@ DEBUG_FLAGS	= -g -fsanitize=address
 SRC_DIR		= src
 OBJ_DIR		= obj
 
-SRC			= 
+SRC			= get_info parse_input compute_checksum print_error print_hash \
+			  algorithms/ft_sslmd5
 OBJS		= $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
 
 
