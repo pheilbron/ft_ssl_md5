@@ -6,13 +6,13 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:00:11 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/07/25 19:24:10 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/07/25 19:42:53 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_ssl.h>
-#include <ft_ssl_error.h>
-#include <libft.h>
+#include "ft_ssl.h"
+#include "ft_ssl_error.h"
+#include "libft.h"
 
 int	parse_input(t_ssl_checksum *chk, char **data, size_t len)
 {
@@ -28,11 +28,14 @@ int	parse_input(t_ssl_checksum *chk, char **data, size_t len)
 		print_error(e, *chk);
 	else if (parse_ssl_options(chk, data, &i, &e).no < 0)
 		print_error(e, *chk);
-	else if (has_p_option(*chk) && parse_ssl_file_stdin(chk, &e).no < 0)
+	else if ((chk->options & _P) == _P && parse_ssl_file_stdin(chk, &e).no < 0)
 		print_error(e, *chk);
-	else if (has_s_option(*chk) && parse_ssl_string(chk, data, &i, &e).no < 0)
-		print_error(e, *chk);
-	else if ((i < len) && parse_ssl_files(chk, data, i, &e).no < 0)
-		print_error(e, *chk);
+	else
+	{
+		if ((chk->options & _S) == _S)
+			parse_ssl_string(chk, data, &i, &e);
+		if ((i < len) && parse_ssl_files(chk, data, i, &e).no < 0)
+			print_error(e, *chk);
+	}
 	return (e.no < 0 ? 0 : 1);
 }

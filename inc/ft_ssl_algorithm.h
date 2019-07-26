@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 15:35:33 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/07/25 15:40:09 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/07/25 19:52:56 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,13 @@ typedef struct	s_ssl_algorithm
 	enum e_ssl_algorithm		type;
 	char						*name;
 	enum e_ssl_algorithm_type	category;
+	void						(*f)();
 }				t_ssl_algorithm;
 
 t_ssl_algorithm	g_algo_tab[] =
 {
-	{md5, "md5", message_digest},
-	{sha256, "sha256", message_digest},
+	{md5, "md5", message_digest, &ft_ssl_md5},
+	{sha256, "sha256", message_digest, &ft_ssl_sha256},
 	NULL
 };
 

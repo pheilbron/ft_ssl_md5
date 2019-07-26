@@ -1,42 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl.h                                           :+:      :+:    :+:   */
+/*   ft_ssl_md5.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/07/25 19:46:25 by pheilbro         ###   ########.fr       */
+/*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
+/*   Updated: 2019/07/25 20:45:14 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SSL_H
-# define FT_SSL_H
+#include "ft_ssl.h"
 
-# define _P 1
-# define _Q 2
-# define _R 4
-# define _S 8
-
-enum	e_ssl_algorithm
+char	*add_padding(char *data)
 {
-	md5,
-	sha256
-};
+	char	*ret;
+	int		padding;
 
-typedef struct	s_file
+	padding = 
+
+char	*ft_ssl_md5(char *data)
 {
-	char	*file_name;
-	char	*data;
-}				t_file;
+	char	*ret;
 
-typedef struct	s_ssl_checksum
-{
-	enum e_ssl_algorithm	type;
-	char					options;
-	t_file					*files;
-	char					**hash;
-	size_t					len;
-}				t_ssl_checksum;
-
-#endif
+	ret = add_padding(data);
+}
