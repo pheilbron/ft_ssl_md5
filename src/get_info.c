@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 15:41:21 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/07/25 19:43:09 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/07/30 14:01:47 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,20 @@ extern t_ssl_option		g_op_tab[];
 
 t_dstring	get_ssl_options(void)
 {
-	int 		i;
-	t_dstring	ret;
+	int 			i;
+	t_dstring		ret;
+	t_ssl_option	options_tab = {{'p', &set_stdin_option, NULL},
+		{'q', &set_quiet_option, &ft_ssl_quiet},
+		{'r', &set_rev_form_option, &ft_ssl_reverse},
+		{'s', &set_print_option, &ft_ssl_print},{0, NULL, &ft_ssl_stdprint}};
+
 
 	i = 0;
 	ft_dstr_init(&ret);
-	while (g_op_tab[i])
+	while (options_tab[i])
 	{
-		if (g_op_tab[i] != 's')
-			ft_dstr_add(&ret, g_op_tab[i].type, 1);
+		if (options_tab[i] != 's')
+			ft_dstr_add(&ret, options_tab[i].type, 1);
 		i++;
 	}
 	ft_dstr_add(&ret, "\0", 1);

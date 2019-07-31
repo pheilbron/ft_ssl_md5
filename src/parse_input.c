@@ -6,13 +6,12 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:00:11 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/07/25 19:42:53 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/07/30 13:55:26 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "ft_ssl_error.h"
-#include "libft.h"
 
 int	parse_input(t_ssl_checksum *chk, char **data, size_t len)
 {

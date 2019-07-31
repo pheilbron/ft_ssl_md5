@@ -6,14 +6,12 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:37:45 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/07/25 19:43:22 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/07/30 13:58:21 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "libft.h"
-
-extern t_err_message	g_error_tab[];
 
 void	print_usage(void)
 {
@@ -23,8 +21,11 @@ void	print_usage(void)
 
 void	print_errno(t_error e, t_ssl_checksum chk)
 {
+	t_err_message	error_tab[] = {{0, "",},
+		{INV_COMMAND, "is an invalid command."}, {INV_OPTION, "illegal option"},
+		{INV_FILE, "No such file or directory"}, {DIRECTORY, "Is a directory"}};
 	printf("%s: %s: %s\n",
-			get_command(chk.type), e.data, g_error_tab[e.no * -1].message);
+			get_command(chk.type), e.data, error_tab[e.no * -1].message);
 	if (errno == INV_OPTION)
 		print_usage();
 	else if (errno == INV_COMMAND)

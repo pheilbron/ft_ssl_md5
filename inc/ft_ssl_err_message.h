@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:55:51 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/07/25 15:18:00 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/07/30 13:58:36 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,5 @@ typedef struct	s_err_message
 	int		errno;
 	char	*message;
 }				t_err_message;
-
-t_err_message	g_error_tab[] = 
-{
-	{0, ""},
-	{INV_COMMAND, "is an invalid command."},
-	{INV_OPTION, "illegal option"},
-	{INV_FILE, "No such file or directory"},
-	{DIRECTORY, "Is a directory"}
-};
 
 #endif
