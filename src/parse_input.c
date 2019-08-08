@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:00:11 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/07/30 13:55:26 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/07 19:33:46 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	parse_input(t_ssl_checksum *chk, char **data, size_t len)
 
 	i = 0;
 	if (len == 0)
-		print_usage();
+		print_usage(*chk);
 	else if (parse_ssl_command(chk, data[i++], &e).no < 0)
 		print_error(e, *chk);
 	else if (len == 1 && parse_ssl_file_stdin(chk, &e).no < 0)

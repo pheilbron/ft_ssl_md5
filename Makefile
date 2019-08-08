@@ -2,15 +2,16 @@ NAME		= ft_ssl
 
 CC			= gcc
 LIB			= -L../libft -lft
-INC_FLAGS	= -I inc -I lib/inc
+INC_FLAGS	= -I inc -I ../libft/inc
 CFLAGS		= -Wall -Werror -Wextra
 DEBUG_FLAGS	= -g -fsanitize=address
 
 SRC_DIR		= src
 OBJ_DIR		= obj
 
-SRC			= get_info parse_input compute_checksum print_error print_hash \
-			  algorithms/ft_sslmd5
+SRC			= main get_info parse_input compute_checksum print_error print_hash \
+			  algorithms/ft_ssl_md5 #\
+			  algorithms/ft_ssl_sha256
 OBJS		= $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
 
 

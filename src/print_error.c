@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:37:45 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/07 13:53:11 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/07 19:37:34 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	print_usage(t_ssl_checksum chk)
 
 	s = ft_dstr_init(s);
 	printf("usage: ft_ssl %s [-%s] [-s string] [files ...]\n",
-			chk.algorithm.name,
+			(chk.algorithm ? chk.algorithm.name : "command",
 			get_ssl_options(s, chk.algorithm.type)->buf);
 	ft_dstr_free(s);
 }

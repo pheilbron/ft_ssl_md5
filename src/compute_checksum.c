@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:48:26 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/07/25 20:03:03 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/07 19:38:29 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	ft_ssl_compute_checksum(t_ssl_checksum *chk)
 	i = 0;
 	while (i < chk->len)
 	{
-		chk->hash[i] = (*get_ssl_algorithm)(chk->type)(chk->file->data);
+		chk->hash[i] = (*get_ssl_algorithm)(chk->type)(chk->file[i]->data);
 		i++;
 	}
 }
