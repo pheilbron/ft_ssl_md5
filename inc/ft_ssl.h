@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/07 14:50:18 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/07 20:30:05 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,21 @@ enum	e_ssl_algorithm
 	md5,
 	sha256
 };
+
+enum	e_ssl_algorithm_type
+{
+	standard,
+	message_digest,
+	cipher
+};
+
+typedef struct	s_ssl_algorithm
+{
+	enum e_ssl_algorithm		algorithm;
+	char						*name;
+	enum e_ssl_algorithm_type	type;
+	void						(*f)();
+}				t_ssl_algorithm;
 
 typedef struct	s_file
 {
