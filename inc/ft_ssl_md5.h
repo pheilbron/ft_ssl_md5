@@ -1,20 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_ssl_md5.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/29 16:21:48 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/07/28 07:56:32 by pheilbro         ###   ########.fr       */
+/*   Created: 2019/08/07 18:54:01 by pheilbro          #+#    #+#             */
+/*   Updated: 2019/08/07 18:54:31 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_list.h"
+#ifndef FT_SSL_MD5_H
+# define FT_SSL_MD5_H
 
-void	ft_lstdelone(t_list **alst, void (*del)(void *, size_t))
+typedef struct	s_md5_chunk
 {
-	(*del)((*alst)->content, (*alst)->content_size);
-	free(*alst);
-	*alst = NULL;
-}
+	uint32_t	*padded_data;
+	size_t		len;
+	size_t		pos;
+	uint32_t	abcd[4];
+	uint32_t	a;
+	uint32_t	b;
+	uint32_t	c;
+	uint32_t	d;
+}				t_md5_chunk;	
+
+#endif

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 15:35:33 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/07/25 19:52:56 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/07 13:45:22 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ enum	e_ssl_algorithm_type
 
 typedef struct	s_ssl_algorithm
 {
-	enum e_ssl_algorithm		type;
+	enum e_ssl_algorithm		algorithm;
 	char						*name;
-	enum e_ssl_algorithm_type	category;
+	enum e_ssl_algorithm_type	type;
 	void						(*f)();
 }				t_ssl_algorithm;
 

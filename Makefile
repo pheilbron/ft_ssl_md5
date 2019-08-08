@@ -1,7 +1,7 @@
 NAME		= ft_ssl
 
 CC			= gcc
-LIB			= -Llib -lftprintf
+LIB			= -L../libft -lft
 INC_FLAGS	= -I inc -I lib/inc
 CFLAGS		= -Wall -Werror -Wextra
 DEBUG_FLAGS	= -g -fsanitize=address
@@ -18,7 +18,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@echo Compiling library.
-	@make -C lib/
+	@make -C ../libft/
 	@$(CC) $(CFLAGS) $(INC_FLAGS) $(LIB) -o $@ $<
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c 
@@ -42,4 +42,3 @@ fclean: clean clean_debug
 	rm -f $(NAME)
 
 re: fclean all
-
