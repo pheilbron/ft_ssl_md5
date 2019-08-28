@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/07 20:30:05 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/28 12:00:23 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,20 @@ typedef struct	s_ssl_algorithm
 	void						(*f)();
 }				t_ssl_algorithm;
 
-typedef struct	s_file
+typedef struct	s_ssl_file
 {
-	int		fd;
-	char	*file_name;
-	char	*data;
-}				t_file;
+	int			fd;
+	char		*file_name;
+	char		*data;
+	uint8_t		print_flag;
+	uint32_t	*hash;
+}				t_ssl_file;
 
 typedef struct	s_ssl_checksum
 {
 	t_ssl_algorithm	algorithm
 	uint8_t			options;
-	t_file			*files;
-	uint32_t		**hash;
-	size_t			len;
+	t_vector		*files;
 }				t_ssl_checksum;
 
 #endif
