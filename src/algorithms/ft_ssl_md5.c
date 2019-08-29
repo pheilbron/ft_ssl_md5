@@ -6,13 +6,17 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/07 18:59:25 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/29 11:13:06 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "ft_ssl.h"
 #include "ft_ssl_md5.h"
+
+#define INIT 1
+#define INIT_TEMP 2
+#define SHIFT_TEMP 3
 
 size_t	md5_pad_data(char *data, t_md5_chunk *chunk)
 {
