@@ -1,17 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_error.c                                      :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/08/28 10:55:52 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/28 12:00:15 by pheilbro         ###   ########.fr       */
+/*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
+/*   Updated: 2019/08/29 11:23:24 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
-#include "libft.h"
+#include "ft_ssl_error.h"
+#include "ft_dstring.h"
 
 void		print_usage(t_ssl_checksum chk)
 {

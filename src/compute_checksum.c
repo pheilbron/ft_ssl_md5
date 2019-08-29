@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:48:26 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/07 19:38:29 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/29 11:51:59 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 extern t_ssl_algorithm	g_algo_tab[];
 
-char	*(*get_ssl_algorithm(enum e_ssl_algorithm_type type))(char *)
+static char	*(*get_ssl_algorithm(enum e_ssl_algorithm_type type))(char *)
 {
 	int	i;
 
@@ -27,9 +27,8 @@ char	*(*get_ssl_algorithm(enum e_ssl_algorithm_type type))(char *)
 	}
 	return (NULL);
 }
-	 
 
-void	ft_ssl_compute_checksum(t_ssl_checksum *chk)
+void		ft_ssl_compute_checksum(t_ssl_checksum *chk)
 {
 	int	i;
 

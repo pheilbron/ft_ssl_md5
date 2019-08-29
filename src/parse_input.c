@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:00:11 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/28 12:00:16 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/29 11:50:03 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 int	parse_input(t_ssl_checksum *chk, char **data, size_t len)
 {
-	int 	i;
+	int		i;
 	t_error	e;
 
 	i = 0;

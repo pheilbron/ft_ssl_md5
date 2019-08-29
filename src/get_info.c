@@ -6,20 +6,20 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 15:41:21 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/28 10:21:19 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/29 11:52:32 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ssl_algorithm.h"
+#include "ft_ssl.h"
 #include "ft_ssl_option.h"
-#include "libft.h"
+#include "ft_dstring.h"
 
 extern t_ssl_algorithm	g_algo_tab[];
 extern t_ssl_option		g_options_tab[];
 
 t_dstring	get_ssl_options(enum e_ssl_algorithm_type type)
 {
-	int 			i;
+	int				i;
 	t_dstring		ret;
 
 	i = 0;
@@ -29,7 +29,7 @@ t_dstring	get_ssl_options(enum e_ssl_algorithm_type type)
 		if (g_options_tab[i].algorithm_type == type)
 			if (g_options_tab[i].algorithm_type != message_digest &&
 					g_options_tab[i].op != 's')
-			ft_dstr_add(&ret, &(g_options_tab[i].op), 1);
+				ft_dstr_add(&ret, &(g_options_tab[i].op), 1);
 		i++;
 	}
 	ft_dstr_add(&ret, "\0", 1);

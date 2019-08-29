@@ -6,9 +6,12 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/07 19:38:59 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/28 09:50:08 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/29 11:18:11 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <stdlib.h>
+#include "ft_ssl.h"
 
 int	main(int ac, char **av)
 {

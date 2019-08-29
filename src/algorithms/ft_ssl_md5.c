@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/29 11:13:06 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/29 11:43:35 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #define INIT_TEMP 2
 #define SHIFT_TEMP 3
 
-size_t	md5_pad_data(char *data, t_md5_chunk *chunk)
+static size_t	pad_data(char *data, t_md5_chunk *chunk)
 {
 	uint32_t	len;
 	int			i;
@@ -28,7 +28,7 @@ size_t	md5_pad_data(char *data, t_md5_chunk *chunk)
 	if ((chunk->padded_data = malloc(sizeof(*chunk->padded_data) * len
 }
 
-int		shift(int x, int i)
+static int		shift(int x, int i)
 {
 	int	shift;
 
@@ -44,7 +44,7 @@ int		shift(int x, int i)
 	return (x << shift | x >> shift);
 }
 
-void	md5_set_abcd(t_md5_chunk *chunk, int type, int append)
+static void		set_abcd(t_md5_chunk *chunk, int type, int append)
 {
 	if (type == INIT)
 	{
@@ -70,7 +70,7 @@ void	md5_set_abcd(t_md5_chunk *chunk, int type, int append)
 	}
 }
 
-void	md5_iterate(t_md5_chunk *chunk, int i)
+static void		iterate(t_md5_chunk *chunk, int i)
 {
 	uint32_t	temp;
 	int			chunk_i;
@@ -95,24 +95,24 @@ void	md5_iterate(t_md5_chunk *chunk, int i)
 		temp = chunk->c ^ (chunk->b | ~(chunk->d));
 		chunk_i = (i * 7) % 16;
 	}
-	md5_set_temp(chunk, SHIFT_TEMP, shift((unsigned int)floor(c * fabs(sin(i + 1)))
-				+ chunk->padded_data[chunk->pos + chunk_i] + temp + chunk->a, i));
+	set_abcd(chunk, SHIFT_TEMP, chunk->padded_data[chunk->pos + chunk_i] + temp
+			+ chunk->a + shift((unsigned int)floor(c * fabs(sin(i + 1))), i));
 }
 
-void	ft_ssl_md5(char *data, uint32_t (*hash)[4])
+void			ft_ssl_md5(char *data, uint32_t (*hash)[4])
 {
 	t_md5_chunk	chunk;
 	size_t		len;
 	size_t		i;
 
-	len = md5_pad_data(data, &chunk);
-	md5_set_abcd(&chunk, INIT, 0);
+	len = pad_data(data, &chunk);
+	set_abcd(&chunk, INIT, 0);
 	while (len > 0)
 	{
 		i = 0;
-		md5_set_temp(&chunk, INIT_TEMP, 0);
+		set_abcd(&chunk, INIT_TEMP, 0);
 		while (i < 64)
-			md5_iterate(&chunk, i);
+			iterate(&chunk, i);
 		chunk.abcd[0] += chunk.a;
 		chunk.abcd[1] += chunk.b;
 		chunk.abcd[2] += chunk.c;

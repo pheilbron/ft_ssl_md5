@@ -6,12 +6,12 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:11:06 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/28 12:00:23 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/29 11:48:24 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SSL_OPTION_H
-# define FT_SSL_OPTION_H
+#ifndef FT_SSL_OPTIONS_H
+# define FT_SSL_OPTIONS_H
 
 typedef struct	s_ssl_option
 {
