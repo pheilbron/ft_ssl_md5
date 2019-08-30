@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/30 08:28:56 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/30 12:17:55 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,15 +94,7 @@ t_dstring		*get_ssl_commands(t_dstring *s,
 		enum e_ssl_algorithm_type category);
 
 int				parse_input(t_ssl_checksum *chk, char **data, size_t len);
-
 t_error			parse_ssl_options(t_ssl_checksum *chk, char **data, int *i,
-		t_error *e);
-
-t_error			parse_ssl_command(t_ssl_checksum *chk, char *data, t_error *e);
-t_error			parse_ssl_file_stdin(t_ssl_checksum *chk, t_error *e);
-void			parse_ssl_string(t_ssl_checksum *chk, char **data, int *i,
-		t_error *e);
-int				parse_ssl_file(t_ssl_checksum *chk, char **data, int i,
 		t_error *e);
 
 void			print_usage(t_ssl_checksum chk);
