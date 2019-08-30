@@ -6,12 +6,14 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/07 18:54:01 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/29 11:48:51 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/30 08:28:02 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_SSL_MD5_H
 # define FT_SSL_MD5_H
+
+#include <stdint.h>
 
 typedef struct	s_md5_chunk
 {

@@ -6,17 +6,22 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/29 11:43:35 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/30 08:32:56 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
+#include <stdint.>
+#include <stdlib.h>
 #include "ft_ssl.h"
 #include "ft_ssl_md5.h"
+#include "ft_string.h"
 
 #define INIT 1
 #define INIT_TEMP 2
 #define SHIFT_TEMP 3
+
+#define LEADING_ONE ((uint32_t)2 << 31)
 
 static size_t	pad_data(char *data, t_md5_chunk *chunk)
 {
@@ -25,7 +30,15 @@ static size_t	pad_data(char *data, t_md5_chunk *chunk)
 
 	i = 0;
 	len = ft_strlen(data) * sizeof(*data);
-	if ((chunk->padded_data = malloc(sizeof(*chunk->padded_data) * len
+	if ((chunk->datadata = malloc(sizeof(*chunk->data) * len * )))
+	{
+		i = ft_ssl_prep_data(&(chunk->data), data, len);
+		chunk->data[i++] = LEADING_ONE;
+		while (i < total - 1)
+			chunk->data[i++] = 0;
+		chunk->data[i] = len;
+	}
+	return (total);
 }
 
 static int		shift(int x, int i)

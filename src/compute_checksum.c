@@ -6,15 +6,16 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:48:26 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/29 11:51:59 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/30 11:28:45 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdint.h>
 #include "ft_ssl.h"
 
 extern t_ssl_algorithm	g_algo_tab[];
 
-static char	*(*get_ssl_algorithm(enum e_ssl_algorithm_type type))(char *)
+static void	(*get_ssl_algorithm(enum e_ssl_algorithm_type type))(char *, uint32_t *)
 {
 	int	i;
 
@@ -30,12 +31,17 @@ static char	*(*get_ssl_algorithm(enum e_ssl_algorithm_type type))(char *)
 
 void		ft_ssl_compute_checksum(t_ssl_checksum *chk)
 {
-	int	i;
+	int			i;
+	t_ssl_file	*file;
 
 	i = 0;
-	while (i < chk->len)
+	while (i < chk->files->pos)
 	{
-		chk->hash[i] = (*get_ssl_algorithm)(chk->type)(chk->file[i]->data);
+		file = (t_ssl_file *)(chk->files->data[i]);
+		if (file->fd == -1)
+			print_non_fatal_error(file);
+		else
+			(*get_ssl_algorithm)(chk->type)(file->data, file->hash);
 		i++;
 	}
 }

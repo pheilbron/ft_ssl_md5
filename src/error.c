@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/29 11:23:24 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/30 11:23:07 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,19 +47,24 @@ void		print_fatal_error(t_error e, t_ssl_checksum chk)
 {
 	if (e.no == INV_COMMAND)
 	{
-		printf("ft_ssl: '%s' is an invalid command.", e.data);
+		printf("ft_ssl: '%s' is an invalid command.\n", e.data);
 		print_commands();
 	}
 	else if (e.no == INV_OPTION)
 	{
-		printf("ft_ssl: illegal option -- %s", e.data);
+		printf("ft_ssl: illegal option -- %s\n", e.data);
 		print_usage(chk);
 	}
 	else if (e.no == INV_FILE || e.no == DIRECTORY)
 		printf("ft_ssl: %s: %s: %s", chk.algorithm.name, e.data,
 				(e.no == INV_FILE ? "No such file or directory" :
-				 "Is a directory"));
-	printf("\n");
+				 "Is a directory\n"));
+}
+
+void		print_non_fatal_error(t_ssl_file *file)
+{
+	if (file->fd == -1)
+		ft_printf("%s\n", file->data);
 }
 
 void		set_ssl_error(t_ssl_file *file, t_error e)
@@ -72,4 +77,3 @@ void		set_ssl_error(t_ssl_file *file, t_error e)
 	else if (e.no == MISSING_ARG)
 		file->data = sprintf("ft_ssl: %s: option requires an argument -- %s",
 				chk.algorithm.name, chk.
-

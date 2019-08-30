@@ -6,15 +6,12 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 20:58:31 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/07/25 21:28:49 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/30 11:31:16 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_ssl_print_hash(t_ssl_checksum *chk)
-{
-	int	i;
+#include "ft_ssl.h"
 
-	i = 0;
-	while (i < chk->len)
-	{
-		
+void	ft_ssl_md_print(t_ssl_checksum *chk, t_ssl_file *file)
+{
+	ft_printf("%s (%s) 

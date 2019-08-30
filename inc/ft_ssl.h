@@ -6,13 +6,14 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/29 15:27:48 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/30 08:28:56 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_SSL_H
 # define FT_SSL_H
 
+# include <stdint.h>
 # include "ft_vector.h"
 # include "ft_dstring.h"
 # include "ft_ssl_md5.h"

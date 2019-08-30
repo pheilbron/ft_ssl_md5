@@ -1,7 +1,19 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2019/08/29 17:20:30 by pheilbro          #+#    #+#              #
+#    Updated: 2019/08/29 17:20:59 by pheilbro         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME		= ft_ssl
 
 CC			= gcc
-LIB			= -L../libft -lft
+LIB			= -L../ft_printf -lftprintf
 INC_FLAGS	= -I inc -I ../libft/inc
 CFLAGS		= -Wall -Werror -Wextra
 DEBUG_FLAGS	= -g -fsanitize=address
@@ -9,7 +21,8 @@ DEBUG_FLAGS	= -g -fsanitize=address
 SRC_DIR		= src
 OBJ_DIR		= obj
 
-SRC			= main get_info parse_input compute_checksum print_error print_hash \
+SRC			= main get_info parse_input parse_aux parse_options \
+			  compute_checksum error print_hash \
 			  algorithms/ft_ssl_md5 #\
 			  algorithms/ft_ssl_sha256
 OBJS		= $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
@@ -19,7 +32,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@echo Compiling library.
-	@make -C ../libft/
+	@make -C ../ft_printf/
 	@$(CC) $(CFLAGS) $(INC_FLAGS) $(LIB) -o $@ $<
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c 
