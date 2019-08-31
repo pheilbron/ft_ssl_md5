@@ -1,32 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl_md5.h                                       :+:      :+:    :+:   */
+/*   prep_data.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/08/07 18:54:01 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/30 18:00:09 by pheilbro         ###   ########.fr       */
+/*   Created: 2019/08/30 18:49:40 by pheilbro          #+#    #+#             */
+/*   Updated: 2019/08/30 18:49:43 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SSL_MD5_H
-# define FT_SSL_MD5_H
+#include "ft_ssl.h"
 
-#include <stdint.h>
-
-typedef struct	s_md5_chunk
+int	ft_ssl_prep_4d_data(uint32_t *data, char *data, uint32_t len)
 {
-	uint32_t	*data;
-	size_t		len;
-	size_t		pos;
-	uint32_t	abcd[4];
-	uint32_t	a;
-	uint32_t	b;
-	uint32_t	c;
-	uint32_t	d;
-}				t_md5_chunk;
+	int	i;
 
-void			ft_ssl_md5(char *data, uint32_t (*hash)[4]);
-
-#endif
+	i = 0;
+	while (i < len)
+	{
+		data[i] = data[(i * 4)] + data[(i * 4) + 1] + data[(i * 4) + 2] +
+			data[(i * 4) + 3];
+		i++;
+	}
+	return (i);
+}

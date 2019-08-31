@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/30 08:32:56 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/30 18:21:13 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ static size_t	pad_data(char *data, t_md5_chunk *chunk)
 
 	i = 0;
 	len = ft_strlen(data) * sizeof(*data);
-	if ((chunk->datadata = malloc(sizeof(*chunk->data) * len * )))
+	if ((chunk->data = malloc(sizeof(*chunk->data) * len * )))
 	{
-		i = ft_ssl_prep_data(&(chunk->data), data, len);
+		i = ft_ssl_prep_4b_data(&(chunk->data), data, len);
 		chunk->data[i++] = LEADING_ONE;
 		while (i < total - 1)
 			chunk->data[i++] = 0;

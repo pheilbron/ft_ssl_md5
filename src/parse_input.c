@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:00:11 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/30 12:17:13 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/08/30 17:58:48 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ static int		parse_ssl_file(t_ssl_checksum *chk, char **data, int i,
 	return (e->no = 1);
 }
 
+// fix flag parsing (if md5 -s -q, this would be incorrect)
+// allow for multiple -s "asdf" 
 int				parse_input(t_ssl_checksum *chk, char **data, size_t len)
 {
 	int		i;
