@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 15:58:49 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/01 16:37:22 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,24 +21,29 @@
 #define INIT_TEMP 2
 #define SHIFT_TEMP 3
 
-#define LEADING_ONE ((uint32_t)2 << 31)
+#define LEADING_ONE ((uint32_t)1 << 31)
+#define FIRST_HALF(x) x / ((uint64_t)1 << 32)
+#define SECOND_HALF(x) x % ((uint64_t)1 << 32)
 
 static size_t	pad_data(char *data, t_md5_chunk *chunk)
 {
-	uint32_t	len;
-	int			i;
+	uint64_t	len;
+	uint64_t	i;
+	uint64_t	chunk_len;
 
 	i = 0;
 	len = ft_strlen(data) * sizeof(*data);
-	if ((chunk->data = malloc(sizeof(*chunk->data) * len * )))
+	if ((chunk->data = malloc(sizeof(*chunk->data) * (chunk_len =
+						(((len / 4) + (16 - ((len / 4) % 16))))))))
 	{
 		i = ft_ssl_prep_4b_data(&(chunk->data), data, len);
 		chunk->data[i++] = LEADING_ONE;
-		while (i < total - 1)
+		while (i < chunk_len - 2)
 			chunk->data[i++] = 0;
-		chunk->data[i] = len;
+		chunk->data[i++] = (uint32_t)(FIRST_HALF(len));
+		chunk->data[i] = (uint32_t)(SECOND_HALF(len));
 	}
-	return (total);
+	return (chunk_len);
 }
 
 static int		shift(int x, int i)
@@ -103,7 +108,7 @@ static void		iterate(t_md5_chunk *chunk, int i)
 		temp = (chunk->b ^ chunk->c ^ chunk->d);
 		chunk_i = ((i * 3) + 5) % 16;
 	}
-	else if (i >= 48 && i < 64)
+	else
 	{
 		temp = chunk->c ^ (chunk->b | ~(chunk->d));
 		chunk_i = (i * 7) % 16;
