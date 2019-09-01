@@ -6,15 +6,15 @@
 #    By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/29 17:20:30 by pheilbro          #+#    #+#              #
-#    Updated: 2019/09/01 15:52:50 by pheilbro         ###   ########.fr        #
+#    Updated: 2019/09/01 16:23:00 by pheilbro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= ft_ssl
 
 CC			= gcc
-LIB			= -L../ft_printf -lftprintf
-INC_FLAGS	= -I inc -I ../ft_printf/ft_printf_turnin/lib/inc -I ../ft_printf/inc
+LIB			= -L../libft -lft
+INC_FLAGS	= -I inc -I ../libft/inc
 CFLAGS		= -Wall -Werror -Wextra
 DEBUG_FLAGS	= -g -fsanitize=address
 
@@ -32,7 +32,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@echo Compiling library.
-	@make -C ../ft_printf/ft_printf_turnin/
+	@make -C ../libft
 	@$(CC) $(CFLAGS) $(INC_FLAGS) $(LIB) -o $@ $<
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c 

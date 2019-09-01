@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/01 13:57:58 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 15:06:25 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/01 16:24:05 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_ssl_md_print(char *algo_name, uint8_t algo_ops, uint8_t hash_len,
 	p_hash = ft_dstr_init();
 	i = 0;
 	while (i < hash_len)
-		ft_dstr_fadd(p_hash, "%.8x", file->hash[i]);
+		ft_dstr_addf(p_hash, "%.8x", file->hash[i]);
 	if (algo_ops & _Q || file->print_flag & _P)
 		ft_printf("%s\n", p_hash);
 	else if (algo_ops & _R)
