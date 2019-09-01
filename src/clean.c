@@ -1,27 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prep_data.c                                        :+:      :+:    :+:   */
+/*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/08/30 18:49:40 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 15:59:07 by pheilbro         ###   ########.fr       */
+/*   Created: 2019/09/01 15:46:23 by pheilbro          #+#    #+#             */
+/*   Updated: 2019/09/01 15:52:18 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-int	ft_ssl_prep_4d_data(uint32_t **prepped_data, char *data, uint32_t len)
+int	ft_ssl_free_error(t_error *e)
 {
-	int	i;
+	int	error_no;
 
-	i = 0;
-	while (i < (int)len)
-	{
-		(*prepped_data)[i] = data[(i * 4)] + data[(i * 4) + 1] +
-			data[(i * 4) + 2] + data[(i * 4) + 3];
-		i++;
-	}
-	return (i);
+	error_no = e->no;
+	if (e->no == INV_COMMAND)
+		free(e->data);
+	free(e);
+	return (error_no);
 }

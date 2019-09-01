@@ -6,12 +6,12 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/30 18:21:13 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/01 15:58:49 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
-#include <stdint.>
+#include <stdint.h>
 #include <stdlib.h>
 #include "ft_ssl.h"
 #include "ft_ssl_md5.h"
@@ -78,7 +78,7 @@ static void		set_abcd(t_md5_chunk *chunk, int type, int append)
 	{
 		chunk->a = chunk->d;
 		chunk->d = chunk->c;
-		chunk->c = chunk-b;
+		chunk->c = chunk->b;
 		chunk->b += append;
 	}
 }
@@ -108,8 +108,8 @@ static void		iterate(t_md5_chunk *chunk, int i)
 		temp = chunk->c ^ (chunk->b | ~(chunk->d));
 		chunk_i = (i * 7) % 16;
 	}
-	set_abcd(chunk, SHIFT_TEMP, chunk->padded_data[chunk->pos + chunk_i] + temp
-			+ chunk->a + shift((unsigned int)floor(c * fabs(sin(i + 1))), i));
+	set_abcd(chunk, SHIFT_TEMP, chunk->data[chunk->pos + chunk_i] + chunk->a +
+			temp + shift((unsigned int)floor(chunk->c * fabs(sin(i + 1))), i));
 }
 
 void			ft_ssl_md5(char *data, uint32_t (*hash)[4])
@@ -137,5 +137,5 @@ void			ft_ssl_md5(char *data, uint32_t (*hash)[4])
 	(*hash)[1] = chunk.abcd[1];
 	(*hash)[2] = chunk.abcd[2];
 	(*hash)[3] = chunk.abcd[3];
-	free(chunk.padded_data);
+	free(chunk.data);
 }

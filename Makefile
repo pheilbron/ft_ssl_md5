@@ -6,7 +6,7 @@
 #    By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/29 17:20:30 by pheilbro          #+#    #+#              #
-#    Updated: 2019/09/01 14:34:00 by pheilbro         ###   ########.fr        #
+#    Updated: 2019/09/01 15:52:50 by pheilbro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME		= ft_ssl
 
 CC			= gcc
 LIB			= -L../ft_printf -lftprintf
-INC_FLAGS	= -I inc -I ../libft/inc -I ../ft_printf/inc
+INC_FLAGS	= -I inc -I ../ft_printf/ft_printf_turnin/lib/inc -I ../ft_printf/inc
 CFLAGS		= -Wall -Werror -Wextra
 DEBUG_FLAGS	= -g -fsanitize=address
 
@@ -22,7 +22,7 @@ SRC_DIR		= src
 OBJ_DIR		= obj
 
 SRC			= main get_info parse_input parse_options process_and_print \
-			  print_aux prep_data error \
+			  prep_data error clean \
 			  algorithms/ft_ssl_md5 #\
 			  algorithms/ft_ssl_sha256
 OBJS		= $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
@@ -32,7 +32,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@echo Compiling library.
-	@make -C ../ft_printf/
+	@make -C ../ft_printf/ft_printf_turnin/
 	@$(CC) $(CFLAGS) $(INC_FLAGS) $(LIB) -o $@ $<
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c 
@@ -44,7 +44,7 @@ debug: all
 	@$(CC) $(CFLAGS) $(INC_FLAGS) $(DEBUG_FLAGS) $(LIB) -o $@ $<
 
 clean: clean_debug
-	make clean -C lib/
+	#make clean -C lib/
 	rm -rf $(OBJ_DIR)
 
 clean_debug:
@@ -52,7 +52,7 @@ clean_debug:
 	rm -rf debug.dSYM 
 
 fclean: clean clean_debug
-	make fclean -C lib/
+	#make fclean -C lib/
 	rm -f $(NAME)
 
 re: fclean all

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 14:51:36 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/01 15:59:16 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@
 # define MISSING_ARG -5
 # define SYS_ERROR -6
 
+# define PARSE_ERROR -1
+# define NO_DATA_MALLOC -2
+
 enum	e_ssl_algorithm
 {
 	md5 = 1,
@@ -51,7 +54,8 @@ typedef struct	s_ssl_algorithm
 	char						*name;
 	enum e_ssl_algorithm_type	type;
 	void						(*f)();
-	void						(*print)();
+	void						(*print)(char *, uint8_t, uint8_t, 
+			t_ssl_file *);
 	uint8_t						hash_len;
 }				t_ssl_algorithm;
 
@@ -90,14 +94,16 @@ int				parse_input(t_ssl_checksum *chk, char **data, size_t len);
 t_error			parse_ssl_options(t_ssl_checksum *chk, char **data, int *i,
 		t_error *e);
 
-int				ft_ssl_prep_4b_data(uint32_t *prepped_data, char *data,
+int				ft_ssl_prep_4b_data(uint32_t **prepped_data, char *data,
 		uint32_t len);
 
 void			ft_ssl_process_and_print(t_ssl_checksum *chk);
 
 int				print_usage(t_ssl_checksum chk);
-void			print_fatal_error(t_error e, t_ssl_checksum chk);
+int				print_fatal_error(t_error e, t_ssl_checksum chk);
 void			print_non_fatal_error(t_ssl_file *file);
-void			set_ssl_error(t_ssl_file *file, t_error e);
+void			set_ssl_error(t_ssl_file *file, char *algorithm_name,
+		t_error e);
+int				ft_ssl_free_error(t_error *e);
 
 #endif
