@@ -6,15 +6,17 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:00:11 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 15:54:21 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/01 16:56:32 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include <fcntl.h>
 #include "ft_ssl.h"
 #include "ft_string.h"
 #include "ft_dstring.h"
 #include "ft_vector.h"
+#include "ft_stdlib.h"
 
 extern t_ssl_algorithm	g_algo_tab[];
 
@@ -90,16 +92,28 @@ static t_error	parse_ssl_string(t_ssl_checksum *chk, char **data, int *i,
 	e->no = 1;
 	return (*e);
 }
-// actually read in data
+
 static int		parse_ssl_file(t_ssl_checksum *chk, char **data, int i,
 		t_error *e)
 {
 	t_ssl_file	*file;
+	t_dstring	*s;
+	char		*line;
 
 	if (!(file = malloc(sizeof(*file))))
 		return (e->no = SYS_ERROR);
+	if ((file->fd = open(data[i], O_DIRECTORY)))
+	{
+		close(file->fd);
+		return (e->no = DIRECTORY);
+	}
+	if ((file->fd = open(data[i], O_RDONLY)) < 0)
+		return (e->no = INV_FILE);
+	s = ft_dstr_init();
+	while (get_next_line(file->fd, &line) > 0)
+		ft_dstr_addf(s, "%s\n", line);
 	file->file_name = data[i];
-	file->print_flag = (chk->options & ~_S) & ~_P;
+	file->print_flag = (chk->options & (~_S & ~_P));
 	ft_vect_add(chk->files, file);
 	return (e->no = 1);
 }
