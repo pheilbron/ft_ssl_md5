@@ -6,16 +6,15 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/30 12:59:58 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/01 14:22:29 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
-#include "ft_ssl_error.h"
 #include "ft_stdio.h"
 #include "ft_dstring.h"
 
-void		print_usage(t_ssl_checksum chk)
+int			print_usage(t_ssl_checksum chk)
 {
 	t_dstring	*s;
 
@@ -25,6 +24,7 @@ void		print_usage(t_ssl_checksum chk)
 				(chk.algorithm ? chk.algorithm.name : "command"),
 				get_ssl_options(s, chk.algorithm.type)->buf);
 	ft_dstr_free(s);
+	return (-1);
 }
 
 static void	print_commands(void)

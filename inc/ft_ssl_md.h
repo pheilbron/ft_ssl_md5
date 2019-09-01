@@ -1,27 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prep_data.c                                        :+:      :+:    :+:   */
+/*   ft_ssl_md.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/08/30 18:49:40 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 14:08:52 by pheilbro         ###   ########.fr       */
+/*   Created: 2019/09/01 14:45:26 by pheilbro          #+#    #+#             */
+/*   Updated: 2019/09/01 14:50:37 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ssl.h"
+#ifndef FT_SSL_MD_H
+# define FT_SSL_MD_H
 
-int	ft_ssl_prep_4d_data(uint32_t *prepped_data, char *data, uint32_t len)
-{
-	int	i;
+# include <stdint.h>
+# include "ft_ssl_file.h"
 
-	i = 0;
-	while (i < len)
-	{
-		prepped_data[i] = data[(i * 4)] + data[(i * 4) + 1] +
-			data[(i * 4) + 2] + data[(i * 4) + 3];
-		i++;
-	}
-	return (i);
-}
+void			ft_ssl_md_print(char *algo_name, uint8_t algo_ops,
+		uint8_t hash_len, t_ssl_file *file);
+
+#endif

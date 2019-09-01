@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/30 18:21:06 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/01 14:51:36 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <stdint.h>
 # include "ft_vector.h"
 # include "ft_dstring.h"
+# include "ft_ssl_file.h"
+# include "ft_ssl_md.h"
 # include "ft_ssl_md5.h"
 
 # define _P 1
@@ -49,16 +51,9 @@ typedef struct	s_ssl_algorithm
 	char						*name;
 	enum e_ssl_algorithm_type	type;
 	void						(*f)();
+	void						(*print)();
+	uint8_t						hash_len;
 }				t_ssl_algorithm;
-
-typedef struct	s_ssl_file
-{
-	int			fd;
-	char		*file_name;
-	char		*data;
-	uint8_t		print_flag;
-	uint32_t	*hash;
-}				t_ssl_file;
 
 typedef struct	s_ssl_checksum
 {
@@ -81,14 +76,12 @@ typedef struct	s_error
 
 t_ssl_algorithm	g_algo_tab[] =
 {
-	{md5, "md5", message_digest, &ft_ssl_md5},
-//	{sha256, "sha256", message_digest, &ft_ssl_sha256},
-	{0, NULL, 0, NULL}
+	{md5, "MD5", message_digest, &ft_ssl_md5, &ft_ssl_md_print, 4},
+//	{sha256, "SHA256", message_digest, &ft_ssl_sha256, 4},
+	{0, NULL, 0, NULL, NULL, 0}
 };
 
-void			ft_ssl_compute_checksum(t_ssl_checksum *chk);
-
-t_dstring		get_ssl_options(enum e_ssl_algorithm_type type);
+t_dstring		*get_ssl_options(t_dstring *s, enum e_ssl_algorithm_type type);
 char			*get_ssl_command(enum e_ssl_algorithm type);
 t_dstring		*get_ssl_commands(t_dstring *s,
 		enum e_ssl_algorithm_type category);
@@ -97,10 +90,14 @@ int				parse_input(t_ssl_checksum *chk, char **data, size_t len);
 t_error			parse_ssl_options(t_ssl_checksum *chk, char **data, int *i,
 		t_error *e);
 
-void			print_usage(t_ssl_checksum chk);
-void			print_fatal_error(t_error e, t_ssl_checksum chk);
-void			set_ssl_error(t_ssl_file *file, t_error e);
+int				ft_ssl_prep_4b_data(uint32_t *prepped_data, char *data,
+		uint32_t len);
 
-int				ft_ssl_prep_4b_data(uint32_t *data, char *data, uint32_t len);
+void			ft_ssl_process_and_print(t_ssl_checksum *chk);
+
+int				print_usage(t_ssl_checksum chk);
+void			print_fatal_error(t_error e, t_ssl_checksum chk);
+void			print_non_fatal_error(t_ssl_file *file);
+void			set_ssl_error(t_ssl_file *file, t_error e);
 
 #endif

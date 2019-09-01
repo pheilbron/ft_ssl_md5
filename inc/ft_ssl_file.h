@@ -1,17 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_hash.c                                       :+:      :+:    :+:   */
+/*   ft_ssl_file.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/25 20:58:31 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/08/30 11:31:16 by pheilbro         ###   ########.fr       */
+/*   Created: 2019/09/01 14:49:31 by pheilbro          #+#    #+#             */
+/*   Updated: 2019/09/01 14:50:04 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ssl.h"
+#ifndef FT_SSL_FILE_H
+# define FT_SSL_FILE_H
 
-void	ft_ssl_md_print(t_ssl_checksum *chk, t_ssl_file *file)
+typedef struct	s_ssl_file
 {
-	ft_printf("%s (%s) 
+	int			fd;
+	char		*file_name;
+	char		*data;
+	uint8_t		print_flag;
+	uint32_t	*hash;
+}				t_ssl_file;
+
+#endif

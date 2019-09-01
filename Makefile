@@ -6,7 +6,7 @@
 #    By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/29 17:20:30 by pheilbro          #+#    #+#              #
-#    Updated: 2019/08/29 17:20:59 by pheilbro         ###   ########.fr        #
+#    Updated: 2019/09/01 14:34:00 by pheilbro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,15 +14,15 @@ NAME		= ft_ssl
 
 CC			= gcc
 LIB			= -L../ft_printf -lftprintf
-INC_FLAGS	= -I inc -I ../libft/inc
+INC_FLAGS	= -I inc -I ../libft/inc -I ../ft_printf/inc
 CFLAGS		= -Wall -Werror -Wextra
 DEBUG_FLAGS	= -g -fsanitize=address
 
 SRC_DIR		= src
 OBJ_DIR		= obj
 
-SRC			= main get_info parse_input parse_aux parse_options \
-			  compute_checksum error print_hash \
+SRC			= main get_info parse_input parse_options process_and_print \
+			  print_aux prep_data error \
 			  algorithms/ft_ssl_md5 #\
 			  algorithms/ft_ssl_sha256
 OBJS		= $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
