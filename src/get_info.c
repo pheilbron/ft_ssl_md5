@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 15:41:21 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 14:18:26 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/01 17:10:30 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ extern t_ssl_option		g_options_tab[];
 
 t_dstring	*get_ssl_options(t_dstring *s, enum e_ssl_algorithm_type type)
 {
-	int				i;
+	int	i;
 
 	i = 0;
 	while (g_options_tab[i].op)
@@ -48,10 +48,12 @@ char		*get_ssl_command(enum e_ssl_algorithm type)
 	}
 	return (NULL);
 }
+
 //fix so that the avaliable algorithms are printed lowercase
+
 t_dstring	*get_ssl_commands(t_dstring *s, enum e_ssl_algorithm_type category)
 {
-	int			i;
+	int	i;
 
 	i = 0;
 	while (g_algo_tab[i].algorithm)

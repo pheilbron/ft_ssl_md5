@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 15:44:45 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/01 17:06:56 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int			print_usage(t_ssl_checksum chk)
 static void	print_commands(void)
 {
 	t_dstring		*s;
+
 	if ((s = ft_dstr_init()))
 	{
 		ft_printf("\nStandard commands:\n%s",
@@ -59,8 +60,8 @@ int			print_fatal_error(t_error e, t_ssl_checksum chk)
 	}
 	else if (e.no == INV_FILE || e.no == DIRECTORY)
 		ft_printf("ft_ssl: %s: %s: %s", chk.algorithm.name, e.data,
-				(e.no == INV_FILE ? "No such file or directory" :
-				 "Is a directory\n"));
+				(e.no == INV_FILE ? "No such file or directory"
+				: "Is a directory\n"));
 	return (0);
 }
 
@@ -78,8 +79,8 @@ void		set_ssl_error(t_ssl_file *file, char *algorithm_name, t_error e)
 	s = ft_dstr_init();
 	if (e.no == INV_FILE || e.no == DIRECTORY)
 		ft_dstr_addf(s, "ft_ssl: %s: %s: %s", algorithm_name,
-				e.data, (e.no == INV_FILE ? "No such file or directory" :
-				 "Is a directory"));
+				e.data, (e.no == INV_FILE ? "No such file or directory"
+					: "Is a directory"));
 	else if (e.no == MISSING_ARG)
 		ft_dstr_addf(s, "ft_ssl: %s: option requires an argument -- s",
 				algorithm_name);

@@ -6,13 +6,15 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:00:11 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 16:56:32 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/01 17:14:00 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <fcntl.h>
 #include "ft_ssl.h"
+#include "ft_ssl_md.h"
+#include "ft_ssl_md5.h"
 #include "ft_string.h"
 #include "ft_dstring.h"
 #include "ft_vector.h"
@@ -119,7 +121,8 @@ static int		parse_ssl_file(t_ssl_checksum *chk, char **data, int i,
 }
 
 // fix flag parsing (if md5 -s -q, this would be incorrect)
-// allow for multiple -s "asdf" 
+// allow for multiple -s "asdf"
+
 int				parse_input(t_ssl_checksum *chk, char **data, size_t len)
 {
 	int		i;

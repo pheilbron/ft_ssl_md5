@@ -6,13 +6,14 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/01 13:57:58 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 16:46:13 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/01 17:11:29 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
 #include "ft_ssl.h"
 #include "ft_ssl_md.h"
+#include "ft_ssl_md5.h"
 #include "ft_dstring.h"
 #include "ft_printf.h"
 
@@ -37,7 +38,7 @@ void	ft_ssl_md_print(char *algo_name, uint8_t algo_ops, uint8_t hash_len,
 	ft_dstr_free(p_hash);
 }
 
-void		ft_ssl_process_and_print(t_ssl_checksum *chk)
+void	ft_ssl_process_and_print(t_ssl_checksum *chk)
 {
 	int			i;
 	int			j;
@@ -51,8 +52,8 @@ void		ft_ssl_process_and_print(t_ssl_checksum *chk)
 			print_non_fatal_error(file);
 		else
 		{
-			j = 0;
-			while (g_algo_tab[j].algorithm)
+			j = -1;
+			while (g_algo_tab[++j].algorithm)
 			{
 				if (chk->algorithm.type == g_algo_tab[j].type)
 				{
@@ -60,7 +61,6 @@ void		ft_ssl_process_and_print(t_ssl_checksum *chk)
 					(*(g_algo_tab[j].f))(chk->algorithm.name,
 					chk->options, chk->algorithm.hash_len, file);
 				}
-				j++;
 			}
 		}
 		i++;
