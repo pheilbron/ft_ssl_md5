@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 17:14:26 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/01 17:24:56 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,6 @@ typedef struct	s_ssl_checksum
 	uint8_t			options;
 	t_vector		*files;
 }				t_ssl_checksum;
-
-typedef struct	s_err_message
-{
-	int		errno;
-	char	*message;
-}				t_err_message;
 
 typedef struct	s_error
 {
