@@ -21,27 +21,27 @@ DEBUG_FLAGS	= -g -fsanitize=address
 SRC_DIR		= src
 OBJ_DIR		= obj
 
-SRC			= main get_info parse_input parse_options process_and_print \
-			  prep_data error clean \
+SRC			= clean get_info parse_input parse_options prep_data \
+			  process_and_print error main \
 			  algorithms/ft_ssl_md5 #\
 			  algorithms/ft_ssl_sha256
-OBJS		= $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
+OBJ			= $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
 
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	@echo Compiling library.
-	@make -C ../libft
-	@$(CC) $(CFLAGS) $(INC_FLAGS) $(LIB) -o $@ $<
+$(NAME): $(OBJ) ../libft/libft.a
+	@$(CC) $(CFLAGS) $(LIB) -o $@ $^
+
+../libft/libft.a:
+	@make -sC libft
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c 
-	@echo Compiling $<.
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(INC_FLAGS) -c $< -o $@
 
-debug: all
-	@$(CC) $(CFLAGS) $(INC_FLAGS) $(DEBUG_FLAGS) $(LIB) -o $@ $<
+debug: 
+	$(CC) $(FLAGS) $(DEBUG_FLAGS) $(INC_FLAGS) src/*.c src/algorithms/*.c ../libft/src/*/*.c ../libft/src/stdio/ft_printf/*.c ../libft/src/stdio/ft_printf/*/*.c
 
 clean: clean_debug
 	#make clean -C lib/

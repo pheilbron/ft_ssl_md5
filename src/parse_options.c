@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
-#include "ft_ssl_options.h"
+//#include "ft_ssl_options.h"
 
 extern t_ssl_option	g_options_tab[];
 

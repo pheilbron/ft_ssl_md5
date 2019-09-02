@@ -11,13 +11,25 @@
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
-#include "ft_ssl_options.h"
-#include "ft_ssl_command.h"
+//#include "ft_ssl_options.h"
+//#include "ft_ssl_command.h"
 #include "ft_dstring.h"
 #include "ft_string.h"
 
-extern t_ssl_command	g_command_tab[];
-extern t_ssl_option		g_options_tab[];
+t_ssl_command	g_command_tab[] =
+{
+    {md5, "md5", message_digest},
+    {0, NULL, 0}
+};
+
+t_ssl_option		g_options_tab[] =
+{
+    {'p', message_digest, _P},
+    {'q', message_digest, _Q},
+    {'r', message_digest, _R},
+    {'s', message_digest, _S},
+    {0, 0, 0}
+};
 
 t_dstring	*get_ssl_options(t_dstring *s, enum e_ssl_algorithm_type type)
 {

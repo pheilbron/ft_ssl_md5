@@ -16,8 +16,8 @@
 # include <stdint.h>
 # include "ft_vector.h"
 # include "ft_dstring.h"
-# include "ft_ssl_file.h"
-# include "ft_ssl_md.h"
+//# include "ft_ssl_file.h"
+//# include "ft_ssl_md.h"
 
 # define _P 1
 # define _Q 2
@@ -46,6 +46,16 @@ enum	e_ssl_algorithm_type
 	message_digest,
 	cipher
 };
+
+
+typedef struct	s_ssl_file
+{
+	int			fd;
+	char		*file_name;
+	char		*data;
+	uint8_t		print_flag;
+	uint32_t	*hash;
+}				t_ssl_file;
 
 typedef struct	s_ssl_algorithm
 {
@@ -83,14 +93,28 @@ typedef struct	s_md5_chunk
 	uint32_t	d;
 }				t_md5_chunk;
 
+void			ft_ssl_md_print(char *algo_name, uint8_t algo_ops,
+		uint8_t hash_len, t_ssl_file *file);
 void			ft_ssl_md5(char *data, uint32_t (*hash)[4]);
 
-t_ssl_algorithm	g_algo_tab[] =
+typedef struct	s_ssl_option
 {
-	{md5, "MD5", message_digest, &ft_ssl_md5, &ft_ssl_md_print, 4},
-//	{sha256, "SHA256", message_digest, &ft_ssl_sha256, 4},
-	{0, NULL, 0, NULL, NULL, 0}
-};
+	char						op;
+	enum e_ssl_algorithm_type	algorithm_type;
+	uint8_t						flag;
+}				t_ssl_option;
+
+
+typedef struct	s_ssl_command
+{
+	enum e_ssl_algorithm		algorithm;
+	char						*name;
+	enum e_ssl_algorithm_type	type;
+}				t_ssl_command;
+
+extern t_ssl_command	g_command_tab[];
+extern t_ssl_option	g_options_tab[];
+extern t_ssl_algorithm	g_algo_tab[];
 
 t_dstring		*get_ssl_options(t_dstring *s, enum e_ssl_algorithm_type type);
 char			*get_ssl_command(enum e_ssl_algorithm type);
@@ -100,7 +124,7 @@ t_dstring		*get_ssl_commands(t_dstring *s,
 int				parse_input(t_ssl_checksum *chk, char **data, size_t len);
 t_error			parse_ssl_options(t_ssl_checksum *chk, char **data, int *i,
 		t_error *e);
-
+	
 int				ft_ssl_prep_4b_data(uint32_t **prepped_data, char *data,
 		uint32_t len);
 

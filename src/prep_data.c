@@ -12,7 +12,7 @@
 
 #include "ft_ssl.h"
 
-int	ft_ssl_prep_4d_data(uint32_t **prepped_data, char *data, uint32_t len)
+int	ft_ssl_prep_4b_data(uint32_t **prepped_data, char *data, uint32_t len)
 {
 	int	i;
 

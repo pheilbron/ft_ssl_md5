@@ -13,13 +13,18 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "ft_ssl.h"
-#include "ft_ssl_md.h"
+//#include "ft_ssl_md.h"
 #include "ft_string.h"
 #include "ft_dstring.h"
 #include "ft_vector.h"
 #include "ft_stdlib.h"
 
-extern t_ssl_algorithm	g_algo_tab[];
+t_ssl_algorithm	g_algo_tab[] = 
+{
+    {md5, "MD5", message_digest, &ft_ssl_md5, &ft_ssl_md_print, 4},
+//  {sha256, "SHA256", message_digest, &ft_ssl_sha256, 4},
+    {0, NULL, 0, NULL, NULL, 0}
+};
 
 static t_error	parse_ssl_command(t_ssl_checksum *chk, char *data, t_error *e)
 {
