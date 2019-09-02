@@ -6,11 +6,10 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 11:46:25 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 14:37:43 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -27,42 +26,47 @@
 #define FIRST_HALF(x) x / ((uint64_t)1 << 32)
 #define SECOND_HALF(x) x % ((uint64_t)1 << 32)
 
-static size_t	pad_data(char *data, t_md5_chunk *chunk)
+uint32_t	g_tab[] = {0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
+	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501, 0x698098d8, 0x8b44f7af,
+	0xffff5bb1, 0x895cd7be, 0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821,
+	0xf61e2562, 0xc040b340, 0x265e5a51, 0xe9b6c7aa, 0xd62f105d, 0x02441453,
+	0xd8a1e681, 0xe7d3fbc8, 0x21e1cde6, 0xc33707d6, 0xf4d50d87, 0x455a14ed,
+	0xa9e3e905, 0xfcefa3f8, 0x676f02d9, 0x8d2a4c8a, 0xfffa3942, 0x8771f681,
+	0x6d9d6122, 0xfde5380c, 0xa4beea44, 0x4bdecfa9, 0xf6bb4b60, 0xbebfbc70,
+	0x289b7ec6, 0xeaa127fa, 0xd4ef3085, 0x04881d05, 0xd9d4d039, 0xe6db99e5,
+	0x1fa27cf8, 0xc4ac5665, 0xf4292244, 0x432aff97, 0xab9423a7, 0xfc93a039,
+	0x655b59c3, 0x8f0ccc92, 0xffeff47d, 0x85845dd1, 0x6fa87e4f, 0xfe2ce6e0,
+	0xa3014314, 0x4e0811a1, 0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391};
+
+uint32_t	g_shift[] = {
+	7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
+	5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20,
+	4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
+	6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21};
+
+static uint32_t	pad_data(char *data, t_md5_chunk *chunk)
 {
 	uint64_t	len;
 	uint64_t	i;
-	uint64_t	chunk_len;
 
 	i = 0;
-	len = ft_strlen(data) * sizeof(*data);
-	chunk_len = ((len / 4) + (16 - ((len / 4) % 16)));
-	if ((chunk->data = malloc(sizeof(*chunk->data) * chunk_len)))
+	len = ft_strlen(data);
+	chunk->len = ((len / 4) + (16 - ((len / 4) % 16)));
+	if ((chunk->data = malloc(sizeof(*chunk->data) * chunk->len)))
 	{
 		i = ft_ssl_prep_4b_data(&(chunk->data), data, len);
-		chunk->data[i++] = LEADING_ONE >> (((len % 4) * 8) -
-				(len % 4 != 0 ? 1 : 0));
-		while (i < chunk_len - 2)
+		chunk->data[i++] += LEADING_ONE >> ((len % 4) * 8);
+		while (i < chunk->len - 2)
 			chunk->data[i++] = 0;
 		chunk->data[i++] = (uint32_t)(FIRST_HALF(len));
 		chunk->data[i] = (uint32_t)(SECOND_HALF(len));
 	}
-	return (chunk_len);
+	return (chunk->len);
 }
 
-static int		shift(int x, int i)
+static uint32_t	shift(uint32_t x, uint32_t i)
 {
-	int	shift;
-
-	shift = 0;
-	if (i >= 0 && i < 16)
-		shift = 7 + (5 * (i % 4));
-	if (i >= 16 && i < 32)
-		shift = (5 * ((i + 1) % 4)) - (i % 3 > 0 ? 1 : 0);
-	if (i >= 32 && i < 48)
-		shift = (i % 4) + ((i % 2) * 2) + (((i + 1) % 2) * ((i / 2) * 3));
-	if (i >= 48 && i < 64)
-		shift = (5 * ((i + 1) % 4)) - (i % 3 > 0 ? 0 : 1);
-	return (x << shift | x >> shift);
+	return ((x << g_shift[i]) | (x >> (32 - g_shift[i])));
 }
 
 static void		set_abcd(t_md5_chunk *chunk, int type, int append)
@@ -94,16 +98,16 @@ static void		set_abcd(t_md5_chunk *chunk, int type, int append)
 static void		iterate(t_md5_chunk *chunk, int i)
 {
 	uint32_t	temp;
-	int			chunk_i;
+	uint32_t	chunk_i;
 
 	if (i >= 0 && i < 16)
 	{
-		temp = (chunk->a & chunk->c) | ((~chunk->b) & chunk->d);
+		temp = (chunk->b & chunk->c) | (~(chunk->b) & chunk->d);
 		chunk_i = i;
 	}
 	else if (i >= 16 && i < 32)
 	{
-		temp = (chunk->d & chunk->b) | (~(chunk->b) & chunk->c);
+		temp = (chunk->b & chunk->d) | (chunk->c & ~(chunk->d));
 		chunk_i = ((i * 5) + 1) % 16;
 	}
 	else if (i >= 32 && i < 48)
@@ -116,22 +120,24 @@ static void		iterate(t_md5_chunk *chunk, int i)
 		temp = chunk->c ^ (chunk->b | ~(chunk->d));
 		chunk_i = (i * 7) % 16;
 	}
-	set_abcd(chunk, SHIFT_TEMP, chunk->data[chunk->pos + chunk_i] + chunk->a +
-			temp + shift((unsigned int)floor(chunk->c * fabs(sin(i + 1))), i));
+	set_abcd(chunk, SHIFT_TEMP, shift(chunk->data[chunk->pos + chunk_i] +
+				chunk->a + temp + g_tab[i], i));
+	printf("\t%d\t%.8x %.8x %.8x %.8x\n", i, chunk->a,
+			chunk->b, chunk->c, chunk->d);
 }
 
 void			ft_ssl_md5(char *data, uint32_t (*hash)[4])
 {
 	t_md5_chunk	chunk;
-	size_t		len;
-	size_t		i;
+	uint32_t	i;
 
-	len = pad_data(data, &chunk);
-	printf("LEN %zu\t CHUNK.LEN %zu\n", len, chunk.len);
-	for (size_t a = 0; a < len; a++)
+	pad_data(data, &chunk);
+	for (size_t a = 0; a < chunk.len; a++)
 		ft_printf("%.32b\t%u\n", chunk.data[a], chunk.data[a]);
 	set_abcd(&chunk, INIT, 0);
-	while (len > 0)
+	printf("pos: %u\t%.8x %.8x %.8x %.8x\n", chunk.pos, chunk.abcd[0],
+			chunk.abcd[1], chunk.abcd[2], chunk.abcd[3]);
+	while (chunk.pos < chunk.len)
 	{
 		i = 0;
 		set_abcd(&chunk, INIT_TEMP, 0);
@@ -142,10 +148,9 @@ void			ft_ssl_md5(char *data, uint32_t (*hash)[4])
 		chunk.abcd[2] += chunk.c;
 		chunk.abcd[3] += chunk.d;
 		chunk.pos += 16;
-		len -= 16;
+		printf("pos: %u\t%.8x %.8x %.8x %.8x\n", chunk.pos, chunk.abcd[0],
+				chunk.abcd[1], chunk.abcd[2], chunk.abcd[3]);
 	}
-	printf("%.8x %.8x %.8x %.8x\n", chunk.abcd[0], chunk.abcd[1], chunk.abcd[2],
-			chunk.abcd[3]);
 //	(*hash)[0] = chunk.abcd[0];
 //	(*hash)[1] = chunk.abcd[1];
 //	(*hash)[2] = chunk.abcd[2];

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/07 18:54:01 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 17:14:43 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 13:28:45 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 typedef struct	s_md5_chunk
 {
 	uint32_t	*data;
-	size_t		len;
-	size_t		pos;
+	uint32_t	len;
+	uint32_t	pos;
 	uint32_t	abcd[4];
 	uint32_t	a;
 	uint32_t	b;
