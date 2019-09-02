@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 17:24:56 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 11:41:23 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,9 @@
 # define FT_SSL_H
 
 # include <stdint.h>
+# include "ft_ssl_error.h"
 # include "ft_vector.h"
 # include "ft_dstring.h"
-//# include "ft_ssl_file.h"
-//# include "ft_ssl_md.h"
-
-# define _P 1
-# define _Q 2
-# define _R 4
-# define _S 8
-
-# define INV_COMMAND -1
-# define INV_OPTION -2
-# define INV_FILE -3
-# define DIRECTORY -4
-# define MISSING_ARG -5
-# define SYS_ERROR -6
-
-# define PARSE_ERROR -1
-# define NO_DATA_MALLOC -2
 
 enum	e_ssl_algorithm
 {
@@ -46,7 +30,6 @@ enum	e_ssl_algorithm_type
 	message_digest,
 	cipher
 };
-
 
 typedef struct	s_ssl_file
 {
@@ -75,45 +58,6 @@ typedef struct	s_ssl_checksum
 	t_vector		*files;
 }				t_ssl_checksum;
 
-typedef struct	s_error
-{
-	int		no;
-	char	*data;
-}				t_error;
-
-typedef struct	s_md5_chunk
-{
-	uint32_t	*data;
-	size_t		len;
-	size_t		pos;
-	uint32_t	abcd[4];
-	uint32_t	a;
-	uint32_t	b;
-	uint32_t	c;
-	uint32_t	d;
-}				t_md5_chunk;
-
-void			ft_ssl_md_print(char *algo_name, uint8_t algo_ops,
-		uint8_t hash_len, t_ssl_file *file);
-void			ft_ssl_md5(char *data, uint32_t (*hash)[4]);
-
-typedef struct	s_ssl_option
-{
-	char						op;
-	enum e_ssl_algorithm_type	algorithm_type;
-	uint8_t						flag;
-}				t_ssl_option;
-
-
-typedef struct	s_ssl_command
-{
-	enum e_ssl_algorithm		algorithm;
-	char						*name;
-	enum e_ssl_algorithm_type	type;
-}				t_ssl_command;
-
-extern t_ssl_command	g_command_tab[];
-extern t_ssl_option	g_options_tab[];
 extern t_ssl_algorithm	g_algo_tab[];
 
 t_dstring		*get_ssl_options(t_dstring *s, enum e_ssl_algorithm_type type);
@@ -126,7 +70,7 @@ t_error			parse_ssl_options(t_ssl_checksum *chk, char **data, int *i,
 		t_error *e);
 	
 int				ft_ssl_prep_4b_data(uint32_t **prepped_data, char *data,
-		uint32_t len);
+		uint64_t len);
 
 void			ft_ssl_process_and_print(t_ssl_checksum *chk);
 
@@ -135,6 +79,7 @@ int				print_fatal_error(t_error e, t_ssl_checksum chk);
 void			print_non_fatal_error(t_ssl_file *file);
 void			set_ssl_error(t_ssl_file *file, char *algorithm_name,
 		t_error e);
+void			ft_ssl_error_init(t_error *e);
 int				ft_ssl_free_error(t_error *e);
 
 #endif

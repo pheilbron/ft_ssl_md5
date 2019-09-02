@@ -6,21 +6,14 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 15:41:21 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 17:10:30 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 10:05:18 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
-//#include "ft_ssl_options.h"
-//#include "ft_ssl_command.h"
+#include "ft_ssl_options.h"
 #include "ft_dstring.h"
 #include "ft_string.h"
-
-t_ssl_command	g_command_tab[] =
-{
-    {md5, "md5", message_digest},
-    {0, NULL, 0}
-};
 
 t_ssl_option		g_options_tab[] =
 {
@@ -53,16 +46,14 @@ char		*get_ssl_command(enum e_ssl_algorithm type)
 	int	i;
 
 	i = 0;
-	while (g_command_tab[i].algorithm)
+	while (g_algo_tab[i].algorithm)
 	{
-		if (g_command_tab[i].algorithm == type)
-			return (g_command_tab[i].name);
+		if (g_algo_tab[i].algorithm == type)
+			return (g_algo_tab[i].name);
 		i++;
 	}
 	return (NULL);
 }
-
-//fix so that the avaliable algorithms are printed lowercase
 
 t_dstring	*get_ssl_commands(t_dstring *s, enum e_ssl_algorithm_type category)
 {
@@ -71,10 +62,10 @@ t_dstring	*get_ssl_commands(t_dstring *s, enum e_ssl_algorithm_type category)
 	i = 0;
 	ft_dstr_overwrite(s, "\0", 1);
 	s->pos = 0;
-	while (g_command_tab[i].algorithm)
+	while (g_algo_tab[i].algorithm)
 	{
-		if (g_command_tab[i].type == category)
-			ft_dstr_addf(s, "%s\n", g_command_tab[i].name);
+		if (g_algo_tab[i].type == category)
+			ft_dstr_addf(s, "%s\n", g_algo_tab[i].name);
 		i++;
 	}
 	return (s);

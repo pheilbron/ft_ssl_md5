@@ -6,14 +6,13 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:34:53 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 14:30:33 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 10:00:35 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
-//#include "ft_ssl_options.h"
-
-extern t_ssl_option	g_options_tab[];
+#include "ft_ssl_options.h"
+#include "ft_ssl_error.h"
 
 static t_error	set_ssl_option(t_ssl_checksum *chk, char op, t_error *e)
 {

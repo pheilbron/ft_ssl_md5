@@ -6,11 +6,12 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 17:06:56 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 10:57:54 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
+#include "ft_ssl_error.h"
 #include "ft_stdio.h"
 #include "ft_printf.h"
 #include "ft_dstring.h"
@@ -25,7 +26,7 @@ int			print_usage(t_ssl_checksum chk)
 				(chk.algorithm.algorithm ? chk.algorithm.name : "command"),
 				get_ssl_options(s, chk.algorithm.type)->buf);
 	else
-		ft_printf("not md\n");
+		ft_printf("usage: ft_ssl command [command opts] [command args]\n");
 	ft_dstr_free(s);
 	return (0);
 }
@@ -90,4 +91,10 @@ void		set_ssl_error(t_ssl_file *file, char *algorithm_name, t_error e)
 		file->data = ft_dstr_release(s);
 	else
 		file->fd = NO_DATA_MALLOC;
+}
+
+void		ft_ssl_error_init(t_error *e)
+{
+	e->no = 0;
+	e->data = NULL;
 }

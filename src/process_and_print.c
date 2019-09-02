@@ -6,13 +6,14 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/01 13:57:58 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 17:11:29 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 10:14:14 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
 #include "ft_ssl.h"
-//#include "ft_ssl_md.h"
+#include "ft_ssl_options.h"
+#include "ft_ssl_md.h"
 #include "ft_dstring.h"
 #include "ft_printf.h"
 

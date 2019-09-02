@@ -6,15 +6,18 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/01 17:13:23 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 11:46:25 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include "ft_ssl.h"
+#include "ft_ssl_md5.h"
 #include "ft_string.h"
+#include "ft_printf.h"
 
 #define INIT 1
 #define INIT_TEMP 2
@@ -36,7 +39,8 @@ static size_t	pad_data(char *data, t_md5_chunk *chunk)
 	if ((chunk->data = malloc(sizeof(*chunk->data) * chunk_len)))
 	{
 		i = ft_ssl_prep_4b_data(&(chunk->data), data, len);
-		chunk->data[i++] = LEADING_ONE;
+		chunk->data[i++] = LEADING_ONE >> (((len % 4) * 8) -
+				(len % 4 != 0 ? 1 : 0));
 		while (i < chunk_len - 2)
 			chunk->data[i++] = 0;
 		chunk->data[i++] = (uint32_t)(FIRST_HALF(len));
@@ -123,13 +127,16 @@ void			ft_ssl_md5(char *data, uint32_t (*hash)[4])
 	size_t		i;
 
 	len = pad_data(data, &chunk);
+	printf("LEN %zu\t CHUNK.LEN %zu\n", len, chunk.len);
+	for (size_t a = 0; a < len; a++)
+		ft_printf("%.32b\t%u\n", chunk.data[a], chunk.data[a]);
 	set_abcd(&chunk, INIT, 0);
 	while (len > 0)
 	{
 		i = 0;
 		set_abcd(&chunk, INIT_TEMP, 0);
 		while (i < 64)
-			iterate(&chunk, i);
+			iterate(&chunk, i++);
 		chunk.abcd[0] += chunk.a;
 		chunk.abcd[1] += chunk.b;
 		chunk.abcd[2] += chunk.c;
@@ -137,9 +144,11 @@ void			ft_ssl_md5(char *data, uint32_t (*hash)[4])
 		chunk.pos += 16;
 		len -= 16;
 	}
-	(*hash)[0] = chunk.abcd[0];
-	(*hash)[1] = chunk.abcd[1];
-	(*hash)[2] = chunk.abcd[2];
-	(*hash)[3] = chunk.abcd[3];
+	printf("%.8x %.8x %.8x %.8x\n", chunk.abcd[0], chunk.abcd[1], chunk.abcd[2],
+			chunk.abcd[3]);
+//	(*hash)[0] = chunk.abcd[0];
+//	(*hash)[1] = chunk.abcd[1];
+//	(*hash)[2] = chunk.abcd[2];
+//	(*hash)[3] = chunk.abcd[3];
 	free(chunk.data);
 }
