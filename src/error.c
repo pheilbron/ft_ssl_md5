@@ -24,6 +24,8 @@ int			print_usage(t_ssl_checksum chk)
 		ft_printf("usage: ft_ssl %s [-%s] [-s string] [files ...]\n",
 				(chk.algorithm.algorithm ? chk.algorithm.name : "command"),
 				get_ssl_options(s, chk.algorithm.type)->buf);
+	else
+		ft_printf("not md\n");
 	ft_dstr_free(s);
 	return (0);
 }

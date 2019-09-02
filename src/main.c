@@ -14,6 +14,7 @@
 #include "ft_ssl.h"
 //#include "ft_ssl_file.h"
 #include "ft_vector.h"
+#include "ft_printf.h"
 
 static void	ft_ssl_free_checksum(t_ssl_checksum *chk)
 {
@@ -40,8 +41,9 @@ int			main(int ac, char **av)
 	chk = malloc(sizeof(*chk));
 	if (!chk || !(chk->files = ft_vect_new(4)))
 		return (0);
-	if (parse_input(chk, ++av, --ac))
+	if (parse_input(chk, av + 1, ac - 1) == 0)
 		ft_ssl_process_and_print(chk);
 	ft_ssl_free_checksum(chk);
+	while(1);
 	return (0);
 }
