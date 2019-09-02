@@ -12,10 +12,11 @@
 
 #include "ft_ssl.h"
 #include "ft_ssl_options.h"
+#include "ft_ssl_command.h"
 #include "ft_dstring.h"
 #include "ft_string.h"
 
-extern t_ssl_algorithm	g_algo_tab[];
+extern t_ssl_command	g_command_tab[];
 extern t_ssl_option		g_options_tab[];
 
 t_dstring	*get_ssl_options(t_dstring *s, enum e_ssl_algorithm_type type)
@@ -40,10 +41,10 @@ char		*get_ssl_command(enum e_ssl_algorithm type)
 	int	i;
 
 	i = 0;
-	while (g_algo_tab[i].algorithm)
+	while (g_command_tab[i].algorithm)
 	{
-		if (g_algo_tab[i].algorithm == type)
-			return (g_algo_tab[i].name);
+		if (g_command_tab[i].algorithm == type)
+			return (g_command_tab[i].name);
 		i++;
 	}
 	return (NULL);
@@ -56,12 +57,12 @@ t_dstring	*get_ssl_commands(t_dstring *s, enum e_ssl_algorithm_type category)
 	int	i;
 
 	i = 0;
-	while (g_algo_tab[i].algorithm)
+	ft_dstr_overwrite(s, "\0", 1);
+	s->pos = 0;
+	while (g_command_tab[i].algorithm)
 	{
-		if (g_algo_tab[i].type == category)
-			ft_dstr_overwrite(s, g_algo_tab[i].name,
-					ft_strlen(g_algo_tab[i].name));
-		ft_dstr_add(s, "\n", 1);
+		if (g_command_tab[i].type == category)
+			ft_dstr_addf(s, "%s\n", g_command_tab[i].name);
 		i++;
 	}
 	return (s);

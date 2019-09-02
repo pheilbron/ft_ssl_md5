@@ -14,7 +14,6 @@
 #include <fcntl.h>
 #include "ft_ssl.h"
 #include "ft_ssl_md.h"
-#include "ft_ssl_md5.h"
 #include "ft_string.h"
 #include "ft_dstring.h"
 #include "ft_vector.h"
@@ -35,6 +34,7 @@ static t_error	parse_ssl_command(t_ssl_checksum *chk, char *data, t_error *e)
 			chk->algorithm.algorithm = g_algo_tab[i].algorithm;
 			chk->algorithm.type = g_algo_tab[i].type;
 			chk->algorithm.f = g_algo_tab[i].f;
+			chk->algorithm.print = g_algo_tab[i].print;
 			chk->algorithm.hash_len = g_algo_tab[i].hash_len;
 			e->no = 1;
 			return (*e);

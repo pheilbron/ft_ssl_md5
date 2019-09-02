@@ -14,7 +14,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "ft_ssl.h"
-#include "ft_ssl_md5.h"
 #include "ft_string.h"
 
 #define INIT 1

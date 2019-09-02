@@ -18,7 +18,6 @@
 # include "ft_dstring.h"
 # include "ft_ssl_file.h"
 # include "ft_ssl_md.h"
-# include "ft_ssl_md5.h"
 
 # define _P 1
 # define _Q 2
@@ -71,6 +70,20 @@ typedef struct	s_error
 	int		no;
 	char	*data;
 }				t_error;
+
+typedef struct	s_md5_chunk
+{
+	uint32_t	*data;
+	size_t		len;
+	size_t		pos;
+	uint32_t	abcd[4];
+	uint32_t	a;
+	uint32_t	b;
+	uint32_t	c;
+	uint32_t	d;
+}				t_md5_chunk;
+
+void			ft_ssl_md5(char *data, uint32_t (*hash)[4]);
 
 t_ssl_algorithm	g_algo_tab[] =
 {
