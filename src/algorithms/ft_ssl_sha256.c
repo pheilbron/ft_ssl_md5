@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 16:05:48 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 19:30:16 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 22:26:50 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,6 @@
 #include "ft_ssl_message_digest.h"
 #include "ft_ssl_sha256.h"
 #include "ft_string.h"
-
-#define A 0
-#define B 1
-#define C 2
-#define D 3
-#define E 4
-#define F 5
-#define G 6
-#define H 7
 
 #define INIT_HASH 0
 #define INIT_SCHEDULE 1
@@ -51,7 +42,7 @@ static uint32_t	pad_data(char *data, t_sha256_chunk *chunk)
 	chunk->len = ((len / 4) + (16 - ((len / 4) % 16)));
 	if ((chunk->data = malloc(sizeof(*chunk->data) * chunk->len)))
 	{
-		i = ft_ssl_prep_4b_data(&(chunk->data), data, len);
+		i = ft_ssl_prep_4b_big_end(&(chunk->data), data, len);
 		chunk->data[i++] += LEADING_ONE >> ((len % 4) * 8);
 		while (i < chunk->len - 2)
 			chunk->data[i++] = 0;
@@ -82,11 +73,14 @@ static void		init_chunk(t_sha256_chunk *chunk, uint8_t type)
 		while (++i < 16)
 			chunk->s[i] = chunk->data[chunk->pos + i];
 		while (++i < 64)
-			chunk->s[i] = chunk->s[i - 16] + chunk->s[i - 7] + 
-				(rot_r(chunk->s[i - 15], 7, 32) ^
-				 rot_r(chunk->s[i - 15], 18, 32) ^
-				 (chunk->s[i - 15] >> 3)) + (rot_r(chunk->s[i - 2], 17, 32) ^
-					 rot_r(chunk->s[i - 2], 19, 32) ^ (chunk->s[i - 2] >> 10));
+			chunk->s[i] = message_schedule_sum(chunk->s, i, S1) +
+				chunk->s[i - 5] + message_schedule_sum(chunk->s, i, S2) +
+				chunk->s[i - 16];
+//			chunk->s[i] = chunk->s[i - 16] + chunk->s[i - 7] + 
+//				(rot_r(chunk->s[i - 15], 7, 32) ^
+//				 rot_r(chunk->s[i - 15], 18, 32) ^
+//				 (chunk->s[i - 15] >> 3)) + (rot_r(chunk->s[i - 2], 17, 32) ^
+//					 rot_r(chunk->s[i - 2], 19, 32) ^ (chunk->s[i - 2] >> 10));
 		for (int i = 0; i < 64; i++)
 			printf("%.8x\n", chunk->s[i]);
 	}
@@ -101,15 +95,18 @@ static void		compress(t_sha256_chunk *chunk)
 	i = -1;
 	while (++i < 64)
 	{
-		temp1 = chunk->temp[H] + chunk->s[i] + (rot_r(chunk->temp[E], 6, 32) ^
-				rot_r(chunk->temp[E], 11, 32) ^ rot_r(chunk->temp[E], 25, 32)) +
-			((chunk->temp[E] & chunk->temp[F]) ^
-			(~(chunk->temp[E]) & chunk->temp[G])) + g_constant_tab[i];
-		temp2 = (rot_r(chunk->temp[A], 2, 32) ^ rot_r(chunk->temp[A], 13, 32) ^
-				rot_r(chunk->temp[A], 22, 32)) +
-			((chunk->temp[A] & chunk->temp[B]) ^
-			(chunk->temp[A] & chunk->temp[C]) ^
-			(chunk->temp[B] & chunk->temp[C]));
+//		temp1 = chunk->temp[H] + chunk->s[i] + (rot_r(chunk->temp[E], 6, 32) ^
+//				rot_r(chunk->temp[E], 11, 32) ^ rot_r(chunk->temp[E], 25, 32)) +
+//			((chunk->temp[E] & chunk->temp[F]) ^
+//			(~(chunk->temp[E]) & chunk->temp[G])) + g_constant_tab[i];
+//		temp2 = (rot_r(chunk->temp[A], 2, 32) ^ rot_r(chunk->temp[A], 13, 32) ^
+//				rot_r(chunk->temp[A], 22, 32)) +
+//			((chunk->temp[A] & chunk->temp[B]) ^
+//			(chunk->temp[A] & chunk->temp[C]) ^
+//			(chunk->temp[B] & chunk->temp[C]));
+		temp1 = compression_sum(chunk, S1) + choice(chunk) + chunk->temp[H] +
+			chunk->s[i] + g_constant_tab[i];
+		temp2 = compression_sum(chunk, S2) + majority(chunk);
 		chunk->temp[H] = chunk->temp[G];
 		chunk->temp[G] = chunk->temp[F];
 		chunk->temp[F] = chunk->temp[E];
