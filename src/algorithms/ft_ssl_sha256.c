@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 16:05:48 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 17:25:41 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 19:30:16 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@
 #define H 7
 
 #define INIT_HASH 0
-#define INIT_TEMP 1
+#define INIT_SCHEDULE 1
+#define ONLOAD 2
+#define OFFLOAD 3
 
 uint32_t g_constant_tab[] = {0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
 	0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01,
@@ -53,14 +55,16 @@ static uint32_t	pad_data(char *data, t_sha256_chunk *chunk)
 		chunk->data[i++] += LEADING_ONE >> ((len % 4) * 8);
 		while (i < chunk->len - 2)
 			chunk->data[i++] = 0;
-		chunk->data[i++] = (uint32_t)(FIRST_HALF(len));
-		chunk->data[i] = (uint32_t)(SECOND_HALF(len));
+		chunk->data[i++] = (uint32_t)(FIRST_HALF(len * 8));
+		chunk->data[i] = (uint32_t)(SECOND_HALF(len * 8));
 	}
 	return (chunk->len);
 }
 
-static void		init_message_schedule(t_sha256_chunk *chunk, uint8_t type)
+static void		init_chunk(t_sha256_chunk *chunk, uint8_t type)
 {
+	uint8_t	i;
+
 	if (type == INIT_HASH)
 	{
 		chunk->hash[A] = 0x6a09e667;
@@ -72,16 +76,19 @@ static void		init_message_schedule(t_sha256_chunk *chunk, uint8_t type)
 		chunk->hash[G] = 0x1f83d9ab;
 		chunk->hash[H] = 0x5be0cd19;
 	}
-	else if (type == INIT_TEMP)
+	else if (type == INIT_SCHEDULE)
 	{
-		chunk->temp[A] = chunk->hash[A];
-		chunk->temp[B] = chunk->hash[B];
-		chunk->temp[C] = chunk->hash[C];
-		chunk->temp[D] = chunk->hash[D];
-		chunk->temp[E] = chunk->hash[E];
-		chunk->temp[F] = chunk->hash[F];
-		chunk->temp[G] = chunk->hash[G];
-		chunk->temp[H] = chunk->hash[H];
+		i = -1;
+		while (++i < 16)
+			chunk->s[i] = chunk->data[chunk->pos + i];
+		while (++i < 64)
+			chunk->s[i] = chunk->s[i - 16] + chunk->s[i - 7] + 
+				(rot_r(chunk->s[i - 15], 7, 32) ^
+				 rot_r(chunk->s[i - 15], 18, 32) ^
+				 (chunk->s[i - 15] >> 3)) + (rot_r(chunk->s[i - 2], 17, 32) ^
+					 rot_r(chunk->s[i - 2], 19, 32) ^ (chunk->s[i - 2] >> 10));
+		for (int i = 0; i < 64; i++)
+			printf("%.8x\n", chunk->s[i]);
 	}
 }
 
@@ -94,12 +101,12 @@ static void		compress(t_sha256_chunk *chunk)
 	i = -1;
 	while (++i < 64)
 	{
-		temp1 = chunk->temp[H] + chunk->s[i] + (rotate_r(chunk->temp[E], 6) ^
-				rotate_r(chunk->temp[E], 11) ^ rotate_r(chunk->temp[E], 25)) +
+		temp1 = chunk->temp[H] + chunk->s[i] + (rot_r(chunk->temp[E], 6, 32) ^
+				rot_r(chunk->temp[E], 11, 32) ^ rot_r(chunk->temp[E], 25, 32)) +
 			((chunk->temp[E] & chunk->temp[F]) ^
 			(~(chunk->temp[E]) & chunk->temp[G])) + g_constant_tab[i];
-		temp2 = (rotate_r(chunk->temp[A], 2) ^ rotate_r(chunk->temp[A], 13) ^
-				rotate_r(chunk->temp[A], 22)) +
+		temp2 = (rot_r(chunk->temp[A], 2, 32) ^ rot_r(chunk->temp[A], 13, 32) ^
+				rot_r(chunk->temp[A], 22, 32)) +
 			((chunk->temp[A] & chunk->temp[B]) ^
 			(chunk->temp[A] & chunk->temp[C]) ^
 			(chunk->temp[B] & chunk->temp[C]));
@@ -111,22 +118,36 @@ static void		compress(t_sha256_chunk *chunk)
 		chunk->temp[C] = chunk->temp[B];
 		chunk->temp[B] = chunk->temp[A];
 		chunk->temp[A] = temp1 + temp2;
-		printf("\t%d\t%.8x %.8x %.8x %.8x %.8x %.8x %.8x %.8x\n", i,
+		printf("t=%2d: %.8X %.8X %.8X %.8X %.8X %.8X %.8X %.8X\n", i,
 				chunk->temp[A], chunk->temp[B], chunk->temp[C], chunk->temp[D],
 				chunk->temp[E], chunk->temp[F], chunk->temp[G], chunk->temp[H]);
 	}
 }
 
-static void		update_message_schedule(t_sha256_chunk *chunk)
+static void		update_message_schedule(t_sha256_chunk *chunk, uint8_t type)
 {
-	chunk->hash[A] += chunk->temp[A];
-	chunk->hash[B] += chunk->temp[B];
-	chunk->hash[C] += chunk->temp[C];
-	chunk->hash[D] += chunk->temp[D];
-	chunk->hash[E] += chunk->temp[E];
-	chunk->hash[F] += chunk->temp[F];
-	chunk->hash[G] += chunk->temp[G];
-	chunk->hash[H] += chunk->temp[H];
+	if (type == ONLOAD)
+	{
+		chunk->temp[A] = chunk->hash[A];
+		chunk->temp[B] = chunk->hash[B];
+		chunk->temp[C] = chunk->hash[C];
+		chunk->temp[D] = chunk->hash[D];
+		chunk->temp[E] = chunk->hash[E];
+		chunk->temp[F] = chunk->hash[F];
+		chunk->temp[G] = chunk->hash[G];
+		chunk->temp[H] = chunk->hash[H];
+	}
+	else if (type == OFFLOAD)
+	{
+		chunk->hash[A] += chunk->temp[A];
+		chunk->hash[B] += chunk->temp[B];
+		chunk->hash[C] += chunk->temp[C];
+		chunk->hash[D] += chunk->temp[D];
+		chunk->hash[E] += chunk->temp[E];
+		chunk->hash[F] += chunk->temp[F];
+		chunk->hash[G] += chunk->temp[G];
+		chunk->hash[H] += chunk->temp[H];
+	}
 }
 
 #include "ft_printf.h"
@@ -134,29 +155,23 @@ static void		update_message_schedule(t_sha256_chunk *chunk)
 void			ft_ssl_sha256(char *data, uint32_t **file_hash)
 {
 	t_sha256_chunk	chunk;
-	uint8_t			i;
 
 	pad_data(data, &chunk);
-	for (size_t a = 0; a < chunk.len; a++)
-		ft_printf("%.32b\t%u\n", chunk.data[a], chunk.data[a]);
+//	for (size_t a = 0; a < chunk.len; a++)
+//		ft_printf("%.32b\t%u\n", chunk.data[a], chunk.data[a]);
 	chunk.pos = 0;
+	init_chunk(&chunk, INIT_HASH);
 	while (chunk.pos < chunk.len)
 	{
-		init_message_schedule(&chunk, INIT_HASH);
-		i = 15;
-		while (++i < 64)
-			chunk.s[i] = chunk.s[i - 16] + chunk.s[i - 7] + 
-				(rotate_r(chunk.s[i - 15], 7) ^ rotate_r(chunk.s[i - 15], 18) ^
-				 (chunk.s[i - 15] >> 3)) + (rotate_r(chunk.s[i - 2], 17) ^
-					 rotate_r(chunk.s[i - 2], 19) ^ (chunk.s[i - 2] >> 10));
-		init_message_schedule(&chunk, INIT_TEMP);
+		init_chunk(&chunk, INIT_SCHEDULE);
+		update_message_schedule(&chunk, ONLOAD);
 		compress(&chunk);
-		update_message_schedule(&chunk);
+		update_message_schedule(&chunk, OFFLOAD);
 		chunk.pos += 16;
 	}
-	printf("%.8x %.8x %.8x %.8x %.8x %.8x %.8x %.8x\n", chunk.hash[A],
-			chunk.hash[B], chunk.hash[C], chunk.hash[D], chunk.hash[E],
-			chunk.hash[F], chunk.hash[G], chunk.hash[H]);
+//	printf("%.8x %.8x %.8x %.8x %.8x %.8x %.8x %.8x\n", chunk.hash[A],
+//			chunk.hash[B], chunk.hash[C], chunk.hash[D], chunk.hash[E],
+//			chunk.hash[F], chunk.hash[G], chunk.hash[H]);
 //	set_4b_file_hash(chunk.hash, file_hash, 8);
 	free(chunk.data);
 }

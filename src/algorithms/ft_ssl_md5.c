@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 17:17:04 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 21:14:26 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@
 #include "ft_ssl_md5.h"
 #include "ft_string.h"
 #include "ft_printf.h"
+
+#define A 0
+#define B 1
+#define C 2
+#define D 3
 
 #define INIT 1
 #define INIT_TEMP 2
@@ -51,39 +56,41 @@ static uint32_t	pad_data(char *data, t_md5_chunk *chunk)
 	chunk->len = ((len / 4) + (16 - ((len / 4) % 16)));
 	if ((chunk->data = malloc(sizeof(*chunk->data) * chunk->len)))
 	{
-		i = ft_ssl_prep_4b_data(&(chunk->data), data, len);
-		chunk->data[i++] += LEADING_ONE >> ((len % 4) * 8);
+		i = ft_ssl_prep_4b_little_end(&(chunk->data), data, len);
+		chunk->data[i++] += (LEADING_ONE >> ((3 - (len % 4)) * 8));
 		while (i < chunk->len - 2)
 			chunk->data[i++] = 0;
-		chunk->data[i++] = (uint32_t)(FIRST_HALF(len));
-		chunk->data[i] = (uint32_t)(SECOND_HALF(len));
+		chunk->data[i++] = (uint32_t)(SECOND_HALF(len * 8));
+		chunk->data[i] = (uint32_t)(FIRST_HALF(len * 8));
 	}
 	return (chunk->len);
 }
 
-static void		set_abcd(t_md5_chunk *chunk, int type, int append)
+static void		set_hash(t_md5_chunk *chunk, int type, int append)
 {
 	if (type == INIT)
 	{
 		chunk->pos = 0;
-		chunk->abcd[0] = 0x67452301;
-		chunk->abcd[1] = 0xefcdab89;
-		chunk->abcd[2] = 0x98badcfe;
-		chunk->abcd[3] = 0x10325476;
+		chunk->hash[A] = 0x67452301;
+		chunk->hash[B] = 0xefcdab89;
+		chunk->hash[C] = 0x98badcfe;
+		chunk->hash[D] = 0x10325476;
 	}
 	else if (type == INIT_TEMP)
 	{
-		chunk->a = chunk->abcd[0];
-		chunk->b = chunk->abcd[1];
-		chunk->c = chunk->abcd[2];
-		chunk->d = chunk->abcd[3];
+		chunk->a = chunk->hash[A];
+		chunk->b = chunk->hash[B];
+		chunk->c = chunk->hash[C];
+		chunk->d = chunk->hash[D];
 	}
 	else if (type == SHIFT_TEMP)
 	{
 		chunk->a = chunk->d;
 		chunk->d = chunk->c;
 		chunk->c = chunk->b;
-		chunk->b += append;
+		chunk->b = append;
+		printf("\t%.8x %.8x %.8x %.8x %.8x\n", chunk->a,
+				chunk->b, chunk->c, chunk->d, append);
 	}
 }
 
@@ -112,10 +119,12 @@ static void		iterate(t_md5_chunk *chunk, int i)
 		temp = chunk->c ^ (chunk->b | ~(chunk->d));
 		chunk_i = (i * 7) % 16;
 	}
-	set_abcd(chunk, SHIFT_TEMP, rotate_left(chunk->data[chunk->pos + chunk_i] +
-				chunk->a + temp + g_tab[i], i));
-	printf("\t%d\t%.8x %.8x %.8x %.8x\n", i, chunk->a,
-			chunk->b, chunk->c, chunk->d);
+	printf("\t%df: %.8x", i, chunk->data[chunk->pos + chunk_i] +
+				chunk->a + temp + g_tab[i]);
+	set_hash(chunk, SHIFT_TEMP, rot_l(chunk->data[chunk->pos + chunk_i] +
+				chunk->a + temp + g_tab[i], i, 32) + chunk->b);
+//	printf("\t%d\t%.8x %.8x %.8x %.8x\n", i, chunk->a,
+//			chunk->b, chunk->c, chunk->d);
 }
 
 void			ft_ssl_md5(char *data, uint32_t (*hash)[4])
@@ -125,27 +134,27 @@ void			ft_ssl_md5(char *data, uint32_t (*hash)[4])
 
 	pad_data(data, &chunk);
 	for (size_t a = 0; a < chunk.len; a++)
-		ft_printf("%.32b\t%u\n", chunk.data[a], chunk.data[a]);
-	set_abcd(&chunk, INIT, 0);
-	printf("pos: %u\t%.8x %.8x %.8x %.8x\n", chunk.pos, chunk.abcd[0],
-			chunk.abcd[1], chunk.abcd[2], chunk.abcd[3]);
+		ft_printf("%.32b\t%.8x\t%u\n", chunk.data[a], chunk.data[a], chunk.data[a]);
+	set_hash(&chunk, INIT, 0);
+	printf("pos: %u\t%.8x %.8x %.8x %.8x\n", chunk.pos, chunk.hash[0],
+			chunk.hash[1], chunk.hash[2], chunk.hash[3]);
 	while (chunk.pos < chunk.len)
 	{
 		i = 0;
-		set_abcd(&chunk, INIT_TEMP, 0);
+		set_hash(&chunk, INIT_TEMP, 0);
 		while (i < 64)
 			iterate(&chunk, i++);
-		chunk.abcd[0] += chunk.a;
-		chunk.abcd[1] += chunk.b;
-		chunk.abcd[2] += chunk.c;
-		chunk.abcd[3] += chunk.d;
+		chunk.hash[A] += chunk.a;
+		chunk.hash[B] += chunk.b;
+		chunk.hash[C] += chunk.c;
+		chunk.hash[D] += chunk.d;
 		chunk.pos += 16;
-		printf("pos: %u\t%.8x %.8x %.8x %.8x\n", chunk.pos, chunk.abcd[0],
-				chunk.abcd[1], chunk.abcd[2], chunk.abcd[3]);
+		printf("pos: %u\t%.8x %.8x %.8x %.8x\n", chunk.pos, chunk.hash[A],
+				chunk.hash[B], chunk.hash[C], chunk.hash[D]);
 	}
-//	(*hash)[0] = chunk.abcd[0];
-//	(*hash)[1] = chunk.abcd[1];
-//	(*hash)[2] = chunk.abcd[2];
-//	(*hash)[3] = chunk.abcd[3];
+//	(*hash)[0] = chunk.hash[0];
+//	(*hash)[1] = chunk.hash[1];
+//	(*hash)[2] = chunk.hash[2];
+//	(*hash)[3] = chunk.hash[3];
 	free(chunk.data);
 }

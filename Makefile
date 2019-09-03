@@ -6,7 +6,7 @@
 #    By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/29 17:20:30 by pheilbro          #+#    #+#              #
-#    Updated: 2019/09/02 17:08:18 by pheilbro         ###   ########.fr        #
+#    Updated: 2019/09/02 19:40:35 by pheilbro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(CC) $(CFLAGS) $(INC_FLAGS) -c $< -o $@
 
 test_md5:
-	gcc $(DEBUG_FLAGS) -I inc -I ../libft/inc -L ../libft -lft test_md5.c src/algorithms/ft_ssl_md5.c src/prep_data.c
+	gcc $(DEBUG_FLAGS) -I inc -I ../libft/inc -L ../libft -lft test_md5.c src/algorithms/ft_ssl_md5.c src/algorithms/ft_ssl_message_digest.c src/prep_data.c
 
 test_sha:
 	gcc $(DEBUG_FLAGS) -I inc -I ../libft/inc -L ../libft -lft test_sha256.c src/algorithms/ft_ssl_sha256.c src/algorithms/ft_ssl_message_digest.c src/prep_data.c

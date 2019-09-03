@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 11:41:23 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 20:01:59 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,9 @@ int				parse_input(t_ssl_checksum *chk, char **data, size_t len);
 t_error			parse_ssl_options(t_ssl_checksum *chk, char **data, int *i,
 		t_error *e);
 	
-int				ft_ssl_prep_4b_data(uint32_t **prepped_data, char *data,
+int				ft_ssl_prep_4b_little_end(uint32_t **prepped_data, char *data,
+		uint64_t len);
+int				ft_ssl_prep_4b_big_end(uint32_t **prepped_data, char *data,
 		uint64_t len);
 
 void			ft_ssl_process_and_print(t_ssl_checksum *chk);
