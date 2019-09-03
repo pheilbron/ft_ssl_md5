@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl_md.h                                        :+:      :+:    :+:   */
+/*   ft_ssl_sha256.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/01 14:45:26 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 09:52:14 by pheilbro         ###   ########.fr       */
+/*   Created: 2019/09/02 16:02:15 by pheilbro          #+#    #+#             */
+/*   Updated: 2019/09/02 17:12:31 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SSL_MD_H
-# define FT_SSL_MD_H
+#ifndef FT_SSL_SHA256_H
+# define FT_SSL_SHA256_H
 
-# include <stdint.h>
-# include "ft_ssl.h"
-# include "ft_ssl_md5.h"
+typedef struct	s_sha256_chunk
+{
+	uint32_t	*data;
+	uint32_t	len;
+	uint32_t	pos;
+	uint32_t	s[64];
+	uint32_t	hash[8];
+	uint32_t	temp[8];
+}				t_sha256_chunk;
 
-void			ft_ssl_md_print(char *algo_name, uint8_t algo_ops,
-		uint8_t hash_len, t_ssl_file *file);
+void	ft_ssl_sha256(char *data, uint32_t **file_hash);
 
 #endif

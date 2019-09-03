@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 14:37:43 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 17:17:04 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include "ft_ssl.h"
+#include "ft_ssl_message_digest.h"
 #include "ft_ssl_md5.h"
 #include "ft_string.h"
 #include "ft_printf.h"
@@ -21,10 +22,6 @@
 #define INIT 1
 #define INIT_TEMP 2
 #define SHIFT_TEMP 3
-
-#define LEADING_ONE ((uint32_t)1 << 31)
-#define FIRST_HALF(x) x / ((uint64_t)1 << 32)
-#define SECOND_HALF(x) x % ((uint64_t)1 << 32)
 
 uint32_t	g_tab[] = {0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501, 0x698098d8, 0x8b44f7af,
@@ -62,11 +59,6 @@ static uint32_t	pad_data(char *data, t_md5_chunk *chunk)
 		chunk->data[i] = (uint32_t)(SECOND_HALF(len));
 	}
 	return (chunk->len);
-}
-
-static uint32_t	shift(uint32_t x, uint32_t i)
-{
-	return ((x << g_shift[i]) | (x >> (32 - g_shift[i])));
 }
 
 static void		set_abcd(t_md5_chunk *chunk, int type, int append)
@@ -120,7 +112,7 @@ static void		iterate(t_md5_chunk *chunk, int i)
 		temp = chunk->c ^ (chunk->b | ~(chunk->d));
 		chunk_i = (i * 7) % 16;
 	}
-	set_abcd(chunk, SHIFT_TEMP, shift(chunk->data[chunk->pos + chunk_i] +
+	set_abcd(chunk, SHIFT_TEMP, rotate_left(chunk->data[chunk->pos + chunk_i] +
 				chunk->a + temp + g_tab[i], i));
 	printf("\t%d\t%.8x %.8x %.8x %.8x\n", i, chunk->a,
 			chunk->b, chunk->c, chunk->d);
