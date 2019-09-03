@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 16:05:48 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 17:17:01 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/02 17:25:41 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,11 @@ static void		compress(t_sha256_chunk *chunk)
 		chunk->temp[E] = chunk->temp[D] + temp1;
 		chunk->temp[D] = chunk->temp[C];
 		chunk->temp[C] = chunk->temp[B];
-		chunk->temp[C] = chunk->temp[A];
+		chunk->temp[B] = chunk->temp[A];
 		chunk->temp[A] = temp1 + temp2;
+		printf("\t%d\t%.8x %.8x %.8x %.8x %.8x %.8x %.8x %.8x\n", i,
+				chunk->temp[A], chunk->temp[B], chunk->temp[C], chunk->temp[D],
+				chunk->temp[E], chunk->temp[F], chunk->temp[G], chunk->temp[H]);
 	}
 }
 
@@ -126,12 +129,16 @@ static void		update_message_schedule(t_sha256_chunk *chunk)
 	chunk->hash[H] += chunk->temp[H];
 }
 
+#include "ft_printf.h"
+
 void			ft_ssl_sha256(char *data, uint32_t **file_hash)
 {
 	t_sha256_chunk	chunk;
 	uint8_t			i;
 
 	pad_data(data, &chunk);
+	for (size_t a = 0; a < chunk.len; a++)
+		ft_printf("%.32b\t%u\n", chunk.data[a], chunk.data[a]);
 	chunk.pos = 0;
 	while (chunk.pos < chunk.len)
 	{
