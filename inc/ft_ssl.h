@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 11:31:27 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 14:55:23 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ t_error			parse_ssl_options(t_ssl_checksum *chk, char **data, int *i,
 int				ft_ssl_prep_4b_little_end(uint32_t **prepped_data, char *data,
 		uint64_t len);
 int				ft_ssl_prep_4b_big_end(uint32_t **prepped_data, char *data,
+		uint64_t len);
+int				ft_ssl_prep_8b_big_end(uint64_t **prepped_data, char *data,
 		uint64_t len);
 uint32_t	u32_le_to_u32_be(uint32_t data);
 

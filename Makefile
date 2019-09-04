@@ -6,7 +6,7 @@
 #    By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/29 17:20:30 by pheilbro          #+#    #+#              #
-#    Updated: 2019/09/02 22:23:38 by pheilbro         ###   ########.fr        #
+#    Updated: 2019/09/04 14:46:39 by pheilbro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,9 @@ OBJ_DIR		= obj
 SRC			= clean get_info parse_input parse_options prep_data \
 			  process_and_print error main \
 			  algorithms/ft_ssl_md5 #\
-			  algorithms/ft_ssl_sha256
+			  algorithms/ft_ssl_sha1 \
+			  algorithms/ft_ssl_sha224 \
+			  algorithms/ft_ssl_sha256 algoritms/ft_ssl_sha256_aux
 OBJ			= $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
 
 
@@ -44,7 +46,12 @@ test_md5:
 	gcc $(DEBUG_FLAGS) -I inc -I ../libft/inc -L ../libft -lft test_md5.c src/algorithms/ft_ssl_md5.c src/algorithms/ft_ssl_message_digest.c src/prep_data.c
 
 test_sha:
-	gcc $(DEBUG_FLAGS) -I inc -I ../libft/inc -L ../libft -lft test_sha256.c src/algorithms/ft_ssl_sha256.c src/algorithms/ft_ssl_message_digest.c src/algorithms/ft_ssl_sha256_aux.c src/prep_data.c
+	gcc $(DEBUG_FLAGS) -I inc -I ../libft/inc -L ../libft -lft test_sha.c \
+		src/algorithms/ft_ssl_sha1.c src/algorithms/ft_ssl_sha256.c \
+		src/algorithms/ft_ssl_message_digest.c \
+		src/algorithms/ft_ssl_sha256_aux.c src/prep_data.c \
+		src/algorithms/ft_ssl_sha224.c src/algorithms/ft_ssl_sha512.c \
+		src/algorithms/ft_ssl_sha512_aux.c
 
 debug: 
 	$(CC) $(FLAGS) $(DEBUG_FLAGS) $(INC_FLAGS) src/*.c src/algorithms/*.c ../libft/src/*/*.c ../libft/src/stdio/ft_printf/*.c ../libft/src/stdio/ft_printf/*/*.c

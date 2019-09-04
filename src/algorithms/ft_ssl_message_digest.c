@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 17:06:19 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 19:27:35 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 14:59:17 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,21 @@ void		set_4b_file_hash(uint32_t *hash, uint32_t **file_hash, uint8_t len)
 	while (i < len)
 	{
 		(*file_hash)[i] = hash[i];
+		i++;
+	}
+}
+
+void		set_8b_to_4b_file_hash(uint64_t *hash, uint32_t **file_hash, uint8_t len)
+{
+	uint8_t	i;
+
+	i = 0;
+	while (i < (len * 2))
+	{
+		if ((i % 2) == 0)
+			(*file_hash)[i] = (uint32_t)(hash[i / 2] >> 32);
+		else
+			(*file_hash)[i] = (hash[i / 2] & 0xFFFFFFFF);
 		i++;
 	}
 }
