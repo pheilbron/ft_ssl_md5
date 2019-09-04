@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 12:47:56 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 14:05:24 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 15:33:12 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static uint32_t	pad_data(char *data, t_sha1_chunk *chunk)
 	if ((chunk->data = malloc(sizeof(*chunk->data) * chunk->len)))
 	{
 		i = ft_ssl_prep_4b_big_end(&(chunk->data), data, len);
-		chunk->data[i++] += LEADING_ONE >> ((len % 4) * 8);
+		chunk->data[i++] += ULONG_LEADING_ONE >> ((len % 4) * 8);
 		while (i < chunk->len - 2)
 			chunk->data[i++] = 0;
 		chunk->data[i++] = (uint32_t)(FIRST_HALF(len * 8));

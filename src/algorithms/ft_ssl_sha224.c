@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 13:45:47 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 14:04:59 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 15:48:00 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static uint32_t	pad_data(char *data, t_sha256_chunk *chunk)
 	if ((chunk->data = malloc(sizeof(*chunk->data) * chunk->len)))
 	{
 		i = ft_ssl_prep_4b_big_end(&(chunk->data), data, len);
-		chunk->data[i++] += LEADING_ONE >> ((len % 4) * 8);
+		chunk->data[i++] += ULONG_LEADING_ONE >> ((len % 4) * 8);
 		while (i < chunk->len - 2)
 			chunk->data[i++] = 0;
 		chunk->data[i++] = (uint32_t)(FIRST_HALF(len * 8));
@@ -50,8 +50,8 @@ static void		init_message_schedule(t_sha256_chunk *chunk)
 	}
 	while (i < 64)
 	{
-		chunk->s[i] = message_schedule_sum(chunk->s, i, S2) +
-			chunk->s[i - 7] + message_schedule_sum(chunk->s, i, S1) +
+		chunk->s[i] = message_schedule_sum(chunk->s, i, S1) +
+			chunk->s[i - 7] + message_schedule_sum(chunk->s, i, S0) +
 			chunk->s[i - 16];
 		i++;
 	}
@@ -68,7 +68,7 @@ static void		compress(t_sha256_chunk *chunk)
 	{
 		temp1 = compression_sum(chunk, S1) + choice(chunk) + chunk->temp[H] +
 			chunk->s[i] + g_sha256_tab[i];
-		temp2 = compression_sum(chunk, S2) + majority(chunk);
+		temp2 = compression_sum(chunk, S0) + majority(chunk);
 		chunk->temp[H] = chunk->temp[G];
 		chunk->temp[G] = chunk->temp[F];
 		chunk->temp[F] = chunk->temp[E];

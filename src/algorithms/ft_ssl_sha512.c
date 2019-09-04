@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 14:26:46 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 15:05:46 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 15:43:15 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #define ONLOAD 1
 #define OFFLOAD 2
 
-#define LLEADING_ONE (uint64_t)1 << 63
 #define FIRST_LEN(x) (x / (ULLONG_MAX / 8))
 
 uint64_t g_sha512_tab[] = {0x428a2f98d728ae22, 0x7137449123ef65cd,
@@ -61,7 +60,7 @@ static uint64_t	pad_data(char *data, t_sha512_chunk *chunk)
 	if ((chunk->data = malloc(sizeof(*chunk->data) * chunk->len)))
 	{
 		i = ft_ssl_prep_8b_big_end(&(chunk->data), data, len);
-		chunk->data[i++] += LLEADING_ONE >> ((len % 4) * 8);
+		chunk->data[i++] += ULLONG_LEADING_ONE >> ((len % 4) * 8);
 		while (i < chunk->len - 2)
 			chunk->data[i++] = 0;
 		chunk->data[i++] = FIRST_LEN(len) * 8;
@@ -82,8 +81,8 @@ static void		init_message_schedule(t_sha512_chunk *chunk)
 	}
 	while (i < 80)
 	{
-		chunk->s[i] = sha512message_schedule_sum(chunk->s, i, S2) +
-			chunk->s[i - 7] + sha512message_schedule_sum(chunk->s, i, S1) +
+		chunk->s[i] = sha512message_schedule_sum(chunk->s, i, S1) +
+			chunk->s[i - 7] + sha512message_schedule_sum(chunk->s, i, S0) +
 			chunk->s[i - 16];
 		i++;
 	}
@@ -99,9 +98,8 @@ static void		compress(t_sha512_chunk *chunk)
 	while (i < 80)
 	{
 		temp1 = sha512compression_sum(chunk, S1) + sha512choice(chunk) +
-			chunk->temp[H] +
-			chunk->s[i] + g_sha512_tab[i];
-		temp2 = sha512compression_sum(chunk, S2) + sha512majority(chunk);
+			chunk->temp[H] + chunk->s[i] + g_sha512_tab[i];
+		temp2 = sha512compression_sum(chunk, S0) + sha512majority(chunk);
 		chunk->temp[H] = chunk->temp[G];
 		chunk->temp[G] = chunk->temp[F];
 		chunk->temp[F] = chunk->temp[E];

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 16:02:15 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 13:55:09 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 15:40:51 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@
 # define G 6
 # define H 7
 
-# define S1 0
-# define S2 1
+# define S0 0
+# define S1 1
 
 typedef struct	s_sha256_chunk
 {

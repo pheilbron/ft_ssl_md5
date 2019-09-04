@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 16:23:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 14:55:59 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 15:32:38 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 # include "ft_ssl.h"
 # include "ft_ssl_md5.h"
 
-#define LEADING_ONE ((uint32_t)1 << 31)
+#define ULONG_LEADING_ONE ((uint32_t)1 << 31)
+#define ULLONG_LEADING_ONE (uint64_t)1 << 63
 #define FIRST_HALF(x) x / ((uint64_t)1 << 32)
 #define SECOND_HALF(x) x % ((uint64_t)1 << 32)
 
