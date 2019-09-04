@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 12:47:56 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 15:33:12 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 16:02:45 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,20 +66,13 @@ static void		update_temp(t_sha1_chunk *ch, uint32_t i)
 	else
 		F = (ch->temp[B] & ch->temp[C]) | (ch->temp[B] & ch->temp[D]) |
 			(ch->temp[C] & ch->temp[D]);
-//	printf("F:%u\tROT A: %llu\tK: %u", F, rot_l(ch->temp[A], 5, 32),
-//			g_sha1_tab[i / 20]);
-//	printf("\tE: %u\tMS[i]: %u\n", ch->temp[E], ch->s[i]);
-	F += (uint32_t)rot_l(ch->temp[A], 5, 32) + ch->temp[E] + g_sha1_tab[i / 20] +
-		ch->s[i];
-//	printf("F: %u\n", F);
+	F += (uint32_t)rot_l(ch->temp[A], 5, 32) + ch->temp[E] + g_sha1_tab[i / 20]
+		+ ch->s[i];
 	ch->temp[E] = ch->temp[D];
 	ch->temp[D] = ch->temp[C];
 	ch->temp[C] = rot_l(ch->temp[B], 30, 32);
 	ch->temp[B] = ch->temp[A];
 	ch->temp[A] = F;
-//	printf("t=%2d: %.8X %.8X %.8X %.8X %.8X\n", i,
-//			ch->temp[A], ch->temp[B], ch->temp[C], ch->temp[D],
-//			ch->temp[E]);
 }
 
 static void		set_block(t_sha1_chunk *chunk)
@@ -101,16 +94,11 @@ static void		set_block(t_sha1_chunk *chunk)
 	chunk->hash[E] += chunk->temp[E];
 }
 
-//#include "ft_printf.h"
-
 void			ft_ssl_sha1(char *data, uint32_t **file_hash)
 {
 	t_sha1_chunk	chunk;
 
 	pad_data(data, &chunk);
-//	for (size_t a = 0; a < chunk.len; a++)
-//		ft_printf("%.32b\t%.8x\t%u\n", chunk.data[a], chunk.data[a],
-//				chunk.data[a]);
 	chunk.pos = 0;
 	chunk.hash[A] = 0x67452301;
 	chunk.hash[B] = 0xefcdab89;

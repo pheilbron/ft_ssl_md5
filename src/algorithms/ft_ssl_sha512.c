@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 14:26:46 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 15:43:15 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 16:16:30 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ static uint64_t	pad_data(char *data, t_sha512_chunk *chunk)
 
 	len = ft_strlen(data);
 	i = (len * 8) + 129;
-	chunk->len = (i + (1024 - (i % 1024))) / 32;
+	chunk->len = (i + (1024 - (i % 1024))) / 64;
 	if ((chunk->data = malloc(sizeof(*chunk->data) * chunk->len)))
 	{
 		i = ft_ssl_prep_8b_big_end(&(chunk->data), data, len);
-		chunk->data[i++] += ULLONG_LEADING_ONE >> ((len % 4) * 8);
+		chunk->data[i++] += ULLONG_LEADING_ONE >> ((len % 8) * 8);
 		while (i < chunk->len - 2)
 			chunk->data[i++] = 0;
 		chunk->data[i++] = FIRST_LEN(len) * 8;
@@ -100,6 +100,10 @@ static void		compress(t_sha512_chunk *chunk)
 		temp1 = sha512compression_sum(chunk, S1) + sha512choice(chunk) +
 			chunk->temp[H] + chunk->s[i] + g_sha512_tab[i];
 		temp2 = sha512compression_sum(chunk, S0) + sha512majority(chunk);
+		printf("compression_sum1: %llu\tchoice: %llu\tH: %llu\tMS[i]: %llu\t",
+				sha512compression_sum(chunk, S1), sha512choice(chunk),
+				chunk->temp[H], chunk->s[i]);
+		printf("K[i]: %llu\t\ttemp1: %llu\n\n", g_sha512_tab[i], temp1);
 		chunk->temp[H] = chunk->temp[G];
 		chunk->temp[G] = chunk->temp[F];
 		chunk->temp[F] = chunk->temp[E];

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 18:49:40 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 14:53:59 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 16:10:28 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	ft_ssl_prep_8b_big_end(uint64_t **prepped_data, char *data, uint64_t len)
 	while (data_i < len)
 	{
 		(*prepped_data)[pdata_i] += (((uint64_t)(data[data_i])) <<
-				((7 - (data_i % 4)) * 8));
+				((7 - (data_i % 8)) * 8));
 		if (data_i % 8 == 7)
 			(*prepped_data)[++pdata_i] = 0;
 		data_i++;
