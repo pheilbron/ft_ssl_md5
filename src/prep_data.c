@@ -6,11 +6,16 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 18:49:40 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 20:03:29 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 11:34:45 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
+
+#define BYTE_1_MASK (uint32_t)0xFF000000
+#define BYTE_2_MASK (uint32_t)0xFF0000
+#define BYTE_3_MASK (uint32_t)0xFF00
+#define BYTE_4_MASK (uint32_t)0xFF
 
 int	ft_ssl_prep_4b_little_end(uint32_t **prepped_data, char *data, uint64_t len)
 {
@@ -48,4 +53,50 @@ int	ft_ssl_prep_4b_big_end(uint32_t **prepped_data, char *data, uint64_t len)
 		data_i++;
 	}
 	return (pdata_i);
+}
+
+int	u8_to_u32_big_end(uint32_t **converted, uint8_t size, uint8_t *data,
+		uint8_t len)
+{
+	uint64_t	data_i;
+	int			converted_i;
+
+	data_i = 0;
+	converted_i = 0;
+	(*converted)[converted_i] = 0;
+	while (data_i < len)
+	{
+		(*converted)[converted_i] += (((uint32_t)(data[data_i])) <<
+				((3 - (data_i % 4)) * 8));
+		if (data_i % 4 == 3)
+			(*converted)[++converted_i] = 0;
+		data_i++;
+	}
+	return (converted_i);
+}
+
+int	u8_to_u32_little_end(uint32_t **converted, uint8_t size, uint8_t *data,
+		uint64_t len)
+{
+	uint64_t	data_i;
+	int			converted_i;
+
+	data_i = 0;
+	converted_i = 0;
+	(*converted)[converted_i] = 0;
+	while (data_i < len)
+	{
+		(*converted)[converted_i] += (((uint32_t)(data[data_i])) <<
+				((data_i % 4) * 8));
+		if (data_i % 4 == 3)
+			(*converted)[++converted_i] = 0;
+		data_i++;
+	}
+	return (converted_i);
+}
+
+uint32_t	u32_le_to_u32_be(uint32_t data)
+{
+	return (((data & BYTE_1_MASK) >> 24) | ((data & BYTE_2_MASK) >> 8) |
+			((data & BYTE_3_MASK) << 8) | ((data & BYTE_4_MASK) << 24));
 }

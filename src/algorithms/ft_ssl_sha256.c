@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 16:05:48 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 22:26:50 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 11:57:10 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,17 +72,13 @@ static void		init_chunk(t_sha256_chunk *chunk, uint8_t type)
 		i = -1;
 		while (++i < 16)
 			chunk->s[i] = chunk->data[chunk->pos + i];
-		while (++i < 64)
-			chunk->s[i] = message_schedule_sum(chunk->s, i, S1) +
-				chunk->s[i - 5] + message_schedule_sum(chunk->s, i, S2) +
+		while (i < 64)
+		{
+			chunk->s[i] = message_schedule_sum(chunk->s, i, S2) +
+				chunk->s[i - 7] + message_schedule_sum(chunk->s, i, S1) +
 				chunk->s[i - 16];
-//			chunk->s[i] = chunk->s[i - 16] + chunk->s[i - 7] + 
-//				(rot_r(chunk->s[i - 15], 7, 32) ^
-//				 rot_r(chunk->s[i - 15], 18, 32) ^
-//				 (chunk->s[i - 15] >> 3)) + (rot_r(chunk->s[i - 2], 17, 32) ^
-//					 rot_r(chunk->s[i - 2], 19, 32) ^ (chunk->s[i - 2] >> 10));
-		for (int i = 0; i < 64; i++)
-			printf("%.8x\n", chunk->s[i]);
+			i++;
+		}
 	}
 }
 
@@ -95,15 +91,6 @@ static void		compress(t_sha256_chunk *chunk)
 	i = -1;
 	while (++i < 64)
 	{
-//		temp1 = chunk->temp[H] + chunk->s[i] + (rot_r(chunk->temp[E], 6, 32) ^
-//				rot_r(chunk->temp[E], 11, 32) ^ rot_r(chunk->temp[E], 25, 32)) +
-//			((chunk->temp[E] & chunk->temp[F]) ^
-//			(~(chunk->temp[E]) & chunk->temp[G])) + g_constant_tab[i];
-//		temp2 = (rot_r(chunk->temp[A], 2, 32) ^ rot_r(chunk->temp[A], 13, 32) ^
-//				rot_r(chunk->temp[A], 22, 32)) +
-//			((chunk->temp[A] & chunk->temp[B]) ^
-//			(chunk->temp[A] & chunk->temp[C]) ^
-//			(chunk->temp[B] & chunk->temp[C]));
 		temp1 = compression_sum(chunk, S1) + choice(chunk) + chunk->temp[H] +
 			chunk->s[i] + g_constant_tab[i];
 		temp2 = compression_sum(chunk, S2) + majority(chunk);
@@ -115,9 +102,6 @@ static void		compress(t_sha256_chunk *chunk)
 		chunk->temp[C] = chunk->temp[B];
 		chunk->temp[B] = chunk->temp[A];
 		chunk->temp[A] = temp1 + temp2;
-		printf("t=%2d: %.8X %.8X %.8X %.8X %.8X %.8X %.8X %.8X\n", i,
-				chunk->temp[A], chunk->temp[B], chunk->temp[C], chunk->temp[D],
-				chunk->temp[E], chunk->temp[F], chunk->temp[G], chunk->temp[H]);
 	}
 }
 
@@ -154,8 +138,6 @@ void			ft_ssl_sha256(char *data, uint32_t **file_hash)
 	t_sha256_chunk	chunk;
 
 	pad_data(data, &chunk);
-//	for (size_t a = 0; a < chunk.len; a++)
-//		ft_printf("%.32b\t%u\n", chunk.data[a], chunk.data[a]);
 	chunk.pos = 0;
 	init_chunk(&chunk, INIT_HASH);
 	while (chunk.pos < chunk.len)
@@ -166,9 +148,6 @@ void			ft_ssl_sha256(char *data, uint32_t **file_hash)
 		update_message_schedule(&chunk, OFFLOAD);
 		chunk.pos += 16;
 	}
-//	printf("%.8x %.8x %.8x %.8x %.8x %.8x %.8x %.8x\n", chunk.hash[A],
-//			chunk.hash[B], chunk.hash[C], chunk.hash[D], chunk.hash[E],
-//			chunk.hash[F], chunk.hash[G], chunk.hash[H]);
-//	set_4b_file_hash(chunk.hash, file_hash, 8);
+	set_4b_file_hash(chunk.hash, file_hash, 8);
 	free(chunk.data);
 }
