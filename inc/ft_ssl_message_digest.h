@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 16:23:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 15:32:38 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 18:17:20 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 # include <stdint.h>
 # include "ft_ssl.h"
 # include "ft_ssl_md5.h"
+# include "ft_ssl_sha1.h"
+# include "ft_ssl_sha256.h"
+# include "ft_ssl_sha512.h"
 
 #define ULONG_LEADING_ONE ((uint32_t)1 << 31)
 #define ULLONG_LEADING_ONE (uint64_t)1 << 63

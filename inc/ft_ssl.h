@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 14:55:23 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 18:13:38 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,11 @@
 enum	e_ssl_algorithm
 {
 	md5 = 1,
-	sha256
+	sha1,
+	sha224,
+	sha256,
+	sha384,
+	sha512
 };
 
 enum	e_ssl_algorithm_type

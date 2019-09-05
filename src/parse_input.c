@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:00:11 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 11:05:53 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 18:14:36 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <fcntl.h>
 #include "ft_ssl.h"
 #include "ft_ssl_options.h"
-#include "ft_ssl_md.h"
+#include "ft_ssl_message_digest.h"
 #include "ft_ssl_error.h"
 #include "ft_string.h"
 #include "ft_dstring.h"
@@ -23,9 +23,13 @@
 
 t_ssl_algorithm	g_algo_tab[] = 
 {
-    {md5, "md5", message_digest, &ft_ssl_md5, &ft_ssl_md_print, 4},
-//  {sha256, "sha256", message_digest, &ft_ssl_sha256, 4},
-    {0, NULL, 0, NULL, NULL, 0}
+	{md5, "md5", message_digest, &ft_ssl_md5, &ft_ssl_md_print, 4},
+	{sha1, "sha1", message_digest, &ft_ssl_sha1, &ft_ssl_md_print, 5},
+	{sha224, "sha224", message_digest, &ft_ssl_sha224, &ft_ssl_md_print, 7},
+	{sha256, "sha256", message_digest, &ft_ssl_sha256, &ft_ssl_md_print, 8},
+	{sha384, "sha384", message_digest, &ft_ssl_sha384, &ft_ssl_md_print, 12},
+	{sha512, "sha512", message_digest, &ft_ssl_sha512, &ft_ssl_md_print, 16},
+	{0, NULL, 0, NULL, NULL, 0}
 };
 
 static t_error	parse_ssl_command(t_ssl_checksum *chk, char *data, t_error *e)

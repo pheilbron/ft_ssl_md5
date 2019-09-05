@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 14:06:03 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 18:17:17 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,9 @@ static void		set_block(t_md5_chunk *chunk)
 	chunk->hash[D] += chunk->temp[D];
 }
 
-void			ft_ssl_md5(char *data, uint32_t (*hash)[4])
+void			ft_ssl_md5(char *data, uint32_t **hash)
 {
 	t_md5_chunk	chunk;
-	uint8_t		i;
 
 	pad_data(data, &chunk);
 	chunk.pos = 0;
@@ -129,11 +128,6 @@ void			ft_ssl_md5(char *data, uint32_t (*hash)[4])
 		set_block(&chunk);
 		chunk.pos += 16;
 	}
-	i = 0;
-	while (i < 4)
-	{
-		(*hash)[i] = u32_le_to_u32_be(chunk.hash[i]);
-		i++;
-	}
+	set_4b_file_hash(chunk.hash, hash, 4);
 	free(chunk.data);
 }
