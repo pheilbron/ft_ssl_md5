@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 22:10:42 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 22:18:25 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 10:40:29 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 enum	e_ssl_algorithm
 {
-	md5 = 1,
+	md5,
 	sha1,
 	sha224,
 	sha256,
@@ -32,13 +32,17 @@ enum	e_ssl_algorithm_type
 
 typedef struct	s_ssl_file
 {
+	int			fd;
 	char		*file_name;
-	char		*data;
-	uint8_t		print_flag;
-	uint32_t	*hash;
-	uint8_t		hash_len;
 	t_error		e;
 }				t_ssl_file;
+
+typedef struct	s_ssl_hash
+{
+	uint32_t	*data;
+	uint8_t		len;
+	t_error		e;
+}				t_ssl_hash;
 
 typedef struct	s_ssl_algorithm
 {
@@ -46,13 +50,14 @@ typedef struct	s_ssl_algorithm
 	char						*name;
 	enum e_ssl_algorithm_type	type;
 	void						(*f)();
-	void						(*print)();
+	void						(*process)();
 }				t_ssl_algorithm;
 
-typedef struct	s_ssl_md_context
+typedef struct	s_ssl_context
 {
 	t_ssl_algorithm	algorithm;
 	uint8_t			options;
 	t_queue			*files;
+	t_queue			*digests;
 	t_error			e;
-}				t_ssl_md_context;
+}				t_ssl_context;
