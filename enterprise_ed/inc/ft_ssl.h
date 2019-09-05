@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 12:33:13 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 16:31:28 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct	s_ssl_file
 	int			fd;
 	char		*file_name;
 	char		*stdin_data;
+	int			stdin_data;
 	t_error		e;
 }				t_ssl_file;
 
@@ -47,6 +48,7 @@ typedef struct	s_ssl_hash
 {
 	uint32_t	*data;
 	uint8_t		len;
+	char		*file_ref;
 	t_error		e;
 }				t_ssl_hash;
 
@@ -70,15 +72,9 @@ typedef struct	s_ssl_context
 
 extern t_ssl_algorithm	g_algo_tab[];
 
-
-
-
-
-
 t_dstring		*get_ssl_options(t_dstring *s, enum e_ssl_algorithm_type type);
 char			*get_ssl_command(enum e_ssl_algorithm type);
-t_dstring		*get_ssl_commands(t_dstring *s,
-		enum e_ssl_algorithm_type category);
+t_dstring		*get_ssl_commands(t_dstring *s, enum e_ssl_algorithm_type type);
 
 int				parse_input(t_ssl_context *c, char **data, int len);
 int				set_ssl_options(t_ssl_context *c, char op);
@@ -97,9 +93,9 @@ uint32_t	u32_le_to_u32_be(uint32_t data);
 
 void			ft_ssl_process_and_print(t_ssl_checksum *chk);
 
-int				print_usage(t_ssl_checksum chk);
-int				print_fatal_error(t_error e, t_ssl_checksum chk);
-void			print_non_fatal_error(t_ssl_file *file);
+int				print_usage(t_ssl_context c);
+int				print_fatal_error(t_ssl_context c);
+void			print_non_fatal_error(t_ssl_hash *hash);
 void			set_ssl_error(t_ssl_file *file, char *algorithm_name,
 		t_error e);
 void			ft_ssl_error_init(t_error *e);

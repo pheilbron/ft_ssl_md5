@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 18:49:40 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 16:10:28 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 15:48:48 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,31 @@ int	ft_ssl_prep_8b_big_end(uint64_t **prepped_data, char *data, uint64_t len)
 	return (pdata_i);
 }
 
-int	u8_to_u32_big_end(uint32_t **converted, uint8_t size, uint8_t *data,
-		uint8_t len)
+int	u8_to_u64_big_end(uint64_t **converted, uint8_t size, uint8_t *data,
+		int len)
 {
-	uint64_t	data_i;
-	int			converted_i;
+	int	data_i;
+	int	converted_i;
+
+	data_i = 0;
+	converted_i = 0;
+	(*converted)[converted_i] = 0;
+	while (data_i < len)
+	{
+		(*converted)[converted_i] += (((uint64_t)(data[data_i])) <<
+				((7 - (data_i % 8)) * 8));
+		if (data_i % 8 == 7)
+			(*converted)[++converted_i] = 0;
+		data_i++;
+	}
+	return (converted_i);
+}
+
+int	u8_to_u32_big_end(uint32_t **converted, uint8_t size, uint8_t *data,
+		int len)
+{
+	int	data_i;
+	int	converted_i;
 
 	data_i = 0;
 	converted_i = 0;
@@ -95,10 +115,10 @@ int	u8_to_u32_big_end(uint32_t **converted, uint8_t size, uint8_t *data,
 }
 
 int	u8_to_u32_little_end(uint32_t **converted, uint8_t size, uint8_t *data,
-		uint64_t len)
+		int	len)
 {
-	uint64_t	data_i;
-	int			converted_i;
+	int	data_i;
+	int	converted_i;
 
 	data_i = 0;
 	converted_i = 0;

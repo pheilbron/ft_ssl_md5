@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 10:57:54 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 15:44:07 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,19 @@
 #include "ft_printf.h"
 #include "ft_dstring.h"
 
-int			print_usage(t_ssl_checksum chk)
+int			print_usage(t_ssl_context c)
 {
 	t_dstring	*s;
 
 	s = ft_dstr_init();
-	if (chk.algorithm.type == message_digest)
+	if (c.algorithm.type == message_digest)
 		ft_printf("usage: ft_ssl %s [-%s] [-s string] [files ...]\n",
-				(chk.algorithm.algorithm ? chk.algorithm.name : "command"),
-				get_ssl_options(s, chk.algorithm.type)->buf);
+				(c.algorithm.algorithm ? c.algorithm.name : "command"),
+				get_ssl_options(s, c.algorithm.type)->buf);
+	else if (c.algorithm.type == cipher)
+		ft_printf("usage: ft_ssl cipher\n");
+	else if (c.algorithm.type == standard)
+		ft_printf("usage: ft_ssl standard\n");
 	else
 		ft_printf("usage: ft_ssl command [command opts] [command args]\n");
 	ft_dstr_free(s);
@@ -49,48 +53,49 @@ static void	print_commands(void)
 	ft_dstr_free(s);
 }
 
-int			print_fatal_error(t_error e, t_ssl_checksum chk)
+int			print_fatal_error(t_ssl_context c)
 {
-	if (e.no == INV_COMMAND)
+	if (c.e.no == INV_COMMAND)
 	{
-		ft_printf("ft_ssl: '%s' is an invalid command.\n", e.data);
+		ft_printf("ft_ssl: '%s' is an invalid command.\n", c.e.data);
 		print_commands();
 	}
-	else if (e.no == INV_OPTION)
+	else if (c.e.no == INV_OPTION)
 	{
-		ft_printf("ft_ssl: illegal option -- %s\n", e.data);
-		print_usage(chk);
+		ft_printf("ft_ssl: illegal option -- %s\n", c.e.data);
+		print_usage(c);
 	}
-	else if (e.no == INV_FILE || e.no == DIRECTORY)
-		ft_printf("ft_ssl: %s: %s: %s", chk.algorithm.name, e.data,
-				(e.no == INV_FILE ? "No such file or directory"
-				: "Is a directory\n"));
 	return (0);
 }
 
-void		print_non_fatal_error(t_ssl_file *file)
+void		print_non_fatal_error(t_ssl_hash *hash)
 {
-	if (file->fd == -1)
-		ft_printf("%s\n", file->data);
+	if (hash->e.no < 0)
+		ft_printf("%s\n", hash->e.data);
 }
 
-void		set_ssl_error(t_ssl_file *file, char *algorithm_name, t_error e)
+t_ssl_hash	*ft_ssl_get_md_error(t_ssl_file *file, char *algorithm_name)
 {
+	t_ssl_hash	*hash;
 	t_dstring	*s;
 
-	file->fd = PARSE_ERROR;
+	if (!(hash = malloc(sizeof(*hash))))
+		return (NULL);
+	hash->er.no = PARSE_ERROR;
 	s = ft_dstr_init();
-	if (e.no == INV_FILE || e.no == DIRECTORY)
+	if (file->e.no == INV_FILE || file->e.no == DIRECTORY)
 		ft_dstr_addf(s, "ft_ssl: %s: %s: %s", algorithm_name,
-				e.data, (e.no == INV_FILE ? "No such file or directory"
-					: "Is a directory"));
-	else if (e.no == MISSING_ARG)
+				file->e.data, (file->e.no == INV_FILE ?
+					"No such file or directory" : "Is a directory"));
+	else if (file->e.no == MISSING_ARG)
 		ft_dstr_addf(s, "ft_ssl: %s: option requires an argument -- s",
 				algorithm_name);
-	if (e.no == INV_FILE || e.no == DIRECTORY || e.no == MISSING_ARG)
-		file->data = ft_dstr_release(s);
+	if (file->e.no == INV_FILE || file->e.no == DIRECTORY ||
+			file->e.no == MISSING_ARG)
+		hash->e.data = ft_dstr_release(s);
 	else
-		file->fd = NO_DATA_MALLOC;
+		hash->e.no = NO_DATA_MALLOC;
+	return (hash);
 }
 
 void		ft_ssl_error_init(t_error *e)

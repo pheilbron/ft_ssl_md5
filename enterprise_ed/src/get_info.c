@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 15:41:21 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 12:19:47 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 13:25:12 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ t_dstring	*get_ssl_options(t_dstring *s, enum e_ssl_algorithm_type type)
 	i = 0;
 	while (g_options_tab[i].op)
 	{
-		if (g_options_tab[i].algorithm_type == type)
-			if (g_options_tab[i].algorithm_type != message_digest &&
-					g_options_tab[i].op != 's')
+		if (g_options_tab[i].algorithm_type == type &&
+				(g_options_tab[i].algorithm_type != message_digest &&
+					g_options_tab[i].op != 's'))
 				ft_dstr_add(s, &(g_options_tab[i].op), 1);
 		i++;
 	}
@@ -46,7 +46,7 @@ char		*get_ssl_command(enum e_ssl_algorithm type)
 	return (NULL);
 }
 
-t_dstring	*get_ssl_commands(t_dstring *s, enum e_ssl_algorithm_type category)
+t_dstring	*get_ssl_commands(t_dstring *s, enum e_ssl_algorithm_type type)
 {
 	int	i;
 
@@ -55,7 +55,7 @@ t_dstring	*get_ssl_commands(t_dstring *s, enum e_ssl_algorithm_type category)
 	s->pos = 0;
 	while (g_algo_tab[i].algorithm)
 	{
-		if (g_algo_tab[i].type == category)
+		if (g_algo_tab[i].type == type)
 			ft_dstr_addf(s, "%s\n", g_algo_tab[i].name);
 		i++;
 	}

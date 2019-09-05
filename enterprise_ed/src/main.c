@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/07 19:38:59 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 11:17:17 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 14:29:22 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int						main(int ac, char **av)
 
 	c = init_context();
 	if (parse_input(c, av + 1, ac - 1))
-		ft_ssl_process_context(c);
+		(*(c->algorithm.process))(c);
+	free(c);
 	return (0);
 }

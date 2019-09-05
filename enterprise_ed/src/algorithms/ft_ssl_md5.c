@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 18:17:17 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 16:31:24 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,26 +37,6 @@ uint32_t	g_shift_tab[] = {
 	4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
 	6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21};
 
-static uint32_t	pad_data(char *data, t_md5_chunk *chunk)
-{
-	uint64_t	len;
-	uint64_t	i;
-
-	len = ft_strlen(data);
-	i = (len * 8) + 65;
-	chunk->len = (i + (512 - (i % 512))) / 32;
-	if ((chunk->data = malloc(sizeof(*chunk->data) * chunk->len)))
-	{
-		i = ft_ssl_prep_4b_little_end(&(chunk->data), data, len);
-		chunk->data[i++] += (LEADING_ONE >> ((3 - (len % 4)) * 8));
-		while (i < chunk->len - 2)
-			chunk->data[i++] = 0;
-		chunk->data[i++] = (uint32_t)(SECOND_HALF(len * 8));
-		chunk->data[i] = (uint32_t)(FIRST_HALF(len * 8));
-	}
-	return (chunk->len);
-}
-
 static uint32_t	f(t_md5_chunk *ch, int i)
 {
 	uint32_t	F;
@@ -82,7 +62,7 @@ static uint32_t	f(t_md5_chunk *ch, int i)
 		F = ch->temp[C] ^ (ch->temp[B] | ~(ch->temp[D]));
 		g = (i * 7) % 16;
 	}
-	return (F + ch->temp[A] + g_constant_tab[i] + ch->data[ch->pos + g]);
+	return (F + ch->temp[A] + g_constant_tab[i] + ch->block->data[g]);
 }
 
 static void		update_temp(t_md5_chunk *chunk, int i)
@@ -113,21 +93,23 @@ static void		set_block(t_md5_chunk *chunk)
 	chunk->hash[D] += chunk->temp[D];
 }
 
-void			ft_ssl_md5(char *data, uint32_t **hash)
+t_ssl_hash		*ft_ssl_md5(t_ssl_file *file)
 {
 	t_md5_chunk	chunk;
+	int			pass;
+	t_ssl_hash	*ret;
 
-	pad_data(data, &chunk);
-	chunk.pos = 0;
+	if (!init_u32_md_block(&(chunk.block), 16, 64))
+		return (NULL);
 	chunk.hash[A] = 0x67452301;
 	chunk.hash[B] = 0xefcdab89;
 	chunk.hash[C] = 0x98badcfe;
 	chunk.hash[D] = 0x10325476;
-	while (chunk.pos < chunk.len)
-	{
+	while ((pass = ft_ssl_set_u32_md_block(&(chunk.block), file, LITTLE_END)))
 		set_block(&chunk);
-		chunk.pos += 16;
-	}
-	set_4b_file_hash(chunk.hash, hash, 4);
-	free(chunk.data);
+	if (!pass)
+		return (NULL);
+	ret = u32_le_to_u32_be(chunk.hash, 4);
+	ft_ssl_free_u32_md_block(&(chunk.block));
+	return (ret);
 }
