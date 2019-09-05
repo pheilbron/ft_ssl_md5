@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 14:08:43 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 15:40:44 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 18:03:12 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # define S0 0
 # define S1 1
 
+#define FIRST_LEN(x) (x / (ULLONG_MAX / 8))
+
 typedef struct	s_sha512_chunk
 {
 	uint64_t	*data;
@@ -39,6 +41,7 @@ typedef struct	s_sha512_chunk
 
 extern uint64_t	g_sha512_tab[];
 
+void		ft_ssl_sha384(char *data, uint32_t **file_hash);
 void		ft_ssl_sha512(char *data, uint32_t **file_hash);
 
 uint64_t    sha512message_schedule_sum(uint64_t message_schedule[80], uint8_t offset,

@@ -6,7 +6,7 @@
 #    By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/29 17:20:30 by pheilbro          #+#    #+#              #
-#    Updated: 2019/09/04 14:46:39 by pheilbro         ###   ########.fr        #
+#    Updated: 2019/09/04 18:04:16 by pheilbro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,9 @@ SRC			= clean get_info parse_input parse_options prep_data \
 			  algorithms/ft_ssl_md5 #\
 			  algorithms/ft_ssl_sha1 \
 			  algorithms/ft_ssl_sha224 \
-			  algorithms/ft_ssl_sha256 algoritms/ft_ssl_sha256_aux
+			  algorithms/ft_ssl_sha256 algoritms/ft_ssl_sha256_aux \
+			  algorithms/ft_ssl_sha384 \
+			  algorithms/ft_ssl_sha512 algoritms/ft_ssl_sha512_aux
 OBJ			= $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
 
 
@@ -51,7 +53,8 @@ test_sha:
 		src/algorithms/ft_ssl_message_digest.c \
 		src/algorithms/ft_ssl_sha256_aux.c src/prep_data.c \
 		src/algorithms/ft_ssl_sha224.c src/algorithms/ft_ssl_sha512.c \
-		src/algorithms/ft_ssl_sha512_aux.c
+		src/algorithms/ft_ssl_sha512_aux.c \
+		src/algorithms/ft_ssl_sha384.c
 
 debug: 
 	$(CC) $(FLAGS) $(DEBUG_FLAGS) $(INC_FLAGS) src/*.c src/algorithms/*.c ../libft/src/*/*.c ../libft/src/stdio/ft_printf/*.c ../libft/src/stdio/ft_printf/*/*.c

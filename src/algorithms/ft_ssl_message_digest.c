@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 17:06:19 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 14:59:17 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 17:56:40 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ uint64_t	rot_l(uint64_t x, uint8_t shift, uint8_t data_size)
 uint64_t	rot_r(uint64_t x, uint8_t shift, uint8_t data_size)
 {
 	if (shift < data_size)
-		return ((x >> shift) | (x << (32 - shift)));
+		return ((x >> shift) | (x << (data_size - shift)));
 	return (x);
 }
 

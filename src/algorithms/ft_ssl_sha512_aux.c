@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 14:30:24 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 15:41:55 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/04 17:21:14 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ uint64_t	sha512compression_sum(t_sha512_chunk *c, uint8_t type)
 
 uint64_t	sha512choice(t_sha512_chunk *c)
 {
-	return ((c->temp[E] & c->temp[F]) ^ ((~c->temp[E] & c->temp[G])));
+	return ((c->temp[E] & c->temp[F]) ^ (~(c->temp[E]) & c->temp[G]));
 }
 
 uint64_t	sha512majority(t_sha512_chunk *c)
