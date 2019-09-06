@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:34:53 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 16:55:13 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 17:46:44 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int set_ssl_option(t_ssl_checksum *c, char op)
 		if (g_options_tab[i].op == op &&
 				g_options_tab[i].type == c->algorithm.type)
 		{
-			chk->options |= g_options_tab[i].flag;
+			c->options |= g_options_tab[i].flag;
 			return (c->e.no = 1);
 		}
 		i++;

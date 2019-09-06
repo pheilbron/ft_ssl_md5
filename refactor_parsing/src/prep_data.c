@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 18:49:40 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 16:10:28 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 17:48:11 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	u8_to_u32_big_end(uint32_t **converted, uint8_t size, uint8_t *data,
 	data_i = 0;
 	converted_i = 0;
 	(*converted)[converted_i] = 0;
-	while (data_i < len)
+	while (data_i < len && converted_i < size)
 	{
 		(*converted)[converted_i] += (((uint32_t)(data[data_i])) <<
 				((3 - (data_i % 4)) * 8));
@@ -103,7 +103,7 @@ int	u8_to_u32_little_end(uint32_t **converted, uint8_t size, uint8_t *data,
 	data_i = 0;
 	converted_i = 0;
 	(*converted)[converted_i] = 0;
-	while (data_i < len)
+	while (data_i < len && converted_i < size)
 	{
 		(*converted)[converted_i] += (((uint32_t)(data[data_i])) <<
 				((data_i % 4) * 8));

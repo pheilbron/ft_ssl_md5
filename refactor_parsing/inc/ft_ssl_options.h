@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:11:06 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 10:13:44 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 17:46:30 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 typedef struct	s_ssl_option
 {
 	char						op;
-	enum e_ssl_algorithm_type	algorithm_type;
+	enum e_ssl_algorithm_type	type;
 	uint8_t						flag;
 }				t_ssl_option;
 

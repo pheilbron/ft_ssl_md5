@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:00:11 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 16:53:55 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 18:23:48 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	parse_ssl_command(t_ssl_checksum *c, char *command)
 		i++;
 	}
 	c->algorithm.algorithm = -1;
-	c->e.data = data;
+	c->e.data = command;
 	return (c->e.no = INV_COMMAND);
 }
 
@@ -60,9 +60,9 @@ int			parse_input(t_ssl_checksum *c, char **data, int len)
 	ft_ssl_error_init(&(c->e));
 	if (parse_ssl_command(c, data[i++]) < 0)
 		print_fatal_error(*c);
-	else if (c->algorithm->type == message_digest)
+	else if (c->algorithm.type == message_digest)
 		parse_message_digest(c, data, len, &i);
 	else
 		print_fatal_error(*c);
-	return (ft_ssl_free_error(&(c->e) < 0 ? 0 : 1));
+	return (c->e.no < 0 ? 0 : 1);
 }

@@ -6,7 +6,7 @@
 #    By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/29 17:20:30 by pheilbro          #+#    #+#              #
-#    Updated: 2019/09/05 17:11:27 by pheilbro         ###   ########.fr        #
+#    Updated: 2019/09/05 18:45:52 by pheilbro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,23 +27,23 @@ SRC			= clean get_info parse_input parse_options prep_data \
 			  algorithms/ft_ssl_md5 \
 			  algorithms/ft_ssl_sha1 \
 			  algorithms/ft_ssl_sha224 \
-			  algorithms/ft_ssl_sha256 algoritms/ft_ssl_sha256_aux \
+			  algorithms/ft_ssl_sha256 algorithms/ft_ssl_sha256_aux \
 			  algorithms/ft_ssl_sha384 \
-			  algorithms/ft_ssl_sha512 algoritms/ft_ssl_sha512_aux
+			  algorithms/ft_ssl_sha512 algorithms/ft_ssl_sha512_aux
 OBJ			= $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
 
 
 all: $(NAME)
 
 $(NAME): $(OBJ) ../../libft/libft.a
-	@$(CC) $(CFLAGS) $(LIB) -o $@ $^
+	@$(CC) $(CFLAGS) $(DEBUG_FLAGS) $(LIB) -o $@ $^
 
 ../../libft/libft.a:
 	@make -sC libft
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c 
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) $(INC_FLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(DEBUG_FLAGS) $(INC_FLAGS) -c $< -o $@
 
 test_md5:
 	gcc $(DEBUG_FLAGS) -I inc -I ../libft/inc -L ../libft -lft test_md5.c src/algorithms/ft_ssl_md5.c src/algorithms/ft_ssl_message_digest.c src/prep_data.c
@@ -58,7 +58,9 @@ test_sha:
 		src/algorithms/ft_ssl_sha384.c
 
 debug: 
-	$(CC) $(FLAGS) $(DEBUG_FLAGS) $(INC_FLAGS) src/*.c src/algorithms/*.c ../libft/src/*/*.c ../libft/src/stdio/ft_printf/*.c ../libft/src/stdio/ft_printf/*/*.c
+	$(CC) $(FLAGS) $(DEBUG_FLAGS) $(INC_FLAGS) $(patsubst %, $(SRC_DIR)/%.c, $(SRC)) \
+		../../libft/src/*/*.c ../../libft/src/stdio/ft_printf/*.c \
+		../../libft/src/stdio/ft_printf/*/*.c
 
 clean: clean_debug
 	#make clean -C lib/

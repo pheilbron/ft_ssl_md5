@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 16:59:16 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 18:22:38 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ static void	print_commands(void)
 
 	if ((s = ft_dstr_init()))
 	{
-		ft_printf("\nStandard commands:\n%s",
+		ft_printf("\nStandard commands:\n%s\n",
 				get_ssl_commands(s, standard)->buf);
 		s->pos = 0;
-		ft_printf("Message Digest commands:\n%s",
+		ft_printf("Message Digest commands:\n%s\n",
 				get_ssl_commands(s, message_digest)->buf);
 		s->pos = 0;
-		ft_printf("Cipher commands:\n%s",
+		ft_printf("Cipher commands:\n%s\n",
 				get_ssl_commands(s, cipher)->buf);
 	}
 	ft_dstr_free(s);
@@ -53,12 +53,12 @@ int			print_fatal_error(t_ssl_checksum chk)
 {
 	if (chk.e.no == INV_COMMAND)
 	{
-		ft_printf("ft_ssl: '%s' is an invalid command.\n", e.data);
+		ft_printf("ft_ssl: '%s' is an invalid command.\n", chk.e.data);
 		print_commands();
 	}
 	else if (chk.e.no == INV_OPTION)
 	{
-		ft_printf("ft_ssl: illegal option -- %s\n", e.data);
+		ft_printf("ft_ssl: illegal option -- %s\n", chk.e.data);
 		print_usage(chk);
 	}
 	return (0);
@@ -93,4 +93,11 @@ void		ft_ssl_error_init(t_error *e)
 {
 	e->no = 0;
 	e->data = NULL;
+}
+
+int			ft_ssl_new_error(t_error *e, int no, char *data)
+{
+	e->no = no;
+	e->data = data;
+	return (no);
 }

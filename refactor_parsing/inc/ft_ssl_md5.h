@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/07 18:54:01 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 11:29:01 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 18:11:39 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,6 @@ typedef struct	s_md5_chunk
 	uint32_t	temp[4];
 }				t_md5_chunk;
 
-void			ft_ssl_md5(char *data, uint32_t (*hash)[4]);
+void			ft_ssl_md5(char *data, uint32_t **hash);
 
 #endif

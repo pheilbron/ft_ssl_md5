@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 12:47:56 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 16:02:45 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 18:12:28 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,22 +57,22 @@ static void		init_message_schedule(t_sha1_chunk *chunk)
 
 static void		update_temp(t_sha1_chunk *ch, uint32_t i)
 {
-	uint32_t	F;
+	uint32_t	temp;
 
 	if (i < 20)
-		F = (ch->temp[B] & ch->temp[C]) | (~(ch->temp[B]) & ch->temp[D]);
+		temp = (ch->temp[B] & ch->temp[C]) | (~(ch->temp[B]) & ch->temp[D]);
 	else if ((i > 19 && i < 40) || (i > 59 && i < 80))
-		F = (ch->temp[B] ^ ch->temp[C] ^ ch->temp[D]);
+		temp = (ch->temp[B] ^ ch->temp[C] ^ ch->temp[D]);
 	else
-		F = (ch->temp[B] & ch->temp[C]) | (ch->temp[B] & ch->temp[D]) |
+		temp = (ch->temp[B] & ch->temp[C]) | (ch->temp[B] & ch->temp[D]) |
 			(ch->temp[C] & ch->temp[D]);
-	F += (uint32_t)rot_l(ch->temp[A], 5, 32) + ch->temp[E] + g_sha1_tab[i / 20]
-		+ ch->s[i];
+	temp += (uint32_t)rot_l(ch->temp[A], 5, 32) + ch->temp[E] +
+		g_sha1_tab[i / 20] + ch->s[i];
 	ch->temp[E] = ch->temp[D];
 	ch->temp[D] = ch->temp[C];
 	ch->temp[C] = rot_l(ch->temp[B], 30, 32);
 	ch->temp[B] = ch->temp[A];
-	ch->temp[A] = F;
+	ch->temp[A] = temp;
 }
 
 static void		set_block(t_sha1_chunk *chunk)

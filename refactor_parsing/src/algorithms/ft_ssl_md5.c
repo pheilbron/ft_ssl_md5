@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 18:17:17 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 18:11:20 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static uint32_t	pad_data(char *data, t_md5_chunk *chunk)
 	if ((chunk->data = malloc(sizeof(*chunk->data) * chunk->len)))
 	{
 		i = ft_ssl_prep_4b_little_end(&(chunk->data), data, len);
-		chunk->data[i++] += (LEADING_ONE >> ((3 - (len % 4)) * 8));
+		chunk->data[i++] += (ULONG_LEADING_ONE >> ((3 - (len % 4)) * 8));
 		while (i < chunk->len - 2)
 			chunk->data[i++] = 0;
 		chunk->data[i++] = (uint32_t)(SECOND_HALF(len * 8));
@@ -59,30 +59,30 @@ static uint32_t	pad_data(char *data, t_md5_chunk *chunk)
 
 static uint32_t	f(t_md5_chunk *ch, int i)
 {
-	uint32_t	F;
+	uint32_t	f_value;
 	uint32_t	g;
 
 	if (i >= 0 && i < 16)
 	{
-		F = (ch->temp[B] & ch->temp[C]) | (~(ch->temp[B]) & ch->temp[D]);
+		f_value = (ch->temp[B] & ch->temp[C]) | (~(ch->temp[B]) & ch->temp[D]);
 		g = i;
 	}
 	else if (i > 15 && i < 32)
 	{
-		F = (ch->temp[B] & ch->temp[D]) | (ch->temp[C] & ~(ch->temp[D]));
+		f_value = (ch->temp[B] & ch->temp[D]) | (ch->temp[C] & ~(ch->temp[D]));
 		g = ((i * 5) + 1) % 16;
 	}
 	else if (i > 31 && i < 48)
 	{
-		F = (ch->temp[B] ^ ch->temp[C] ^ ch->temp[D]);
+		f_value = (ch->temp[B] ^ ch->temp[C] ^ ch->temp[D]);
 		g = ((i * 3) + 5) % 16;
 	}
 	else
 	{
-		F = ch->temp[C] ^ (ch->temp[B] | ~(ch->temp[D]));
+		f_value = ch->temp[C] ^ (ch->temp[B] | ~(ch->temp[D]));
 		g = (i * 7) % 16;
 	}
-	return (F + ch->temp[A] + g_constant_tab[i] + ch->data[ch->pos + g]);
+	return (f_value + ch->temp[A] + g_constant_tab[i] + ch->data[ch->pos + g]);
 }
 
 static void		update_temp(t_md5_chunk *chunk, int i)
