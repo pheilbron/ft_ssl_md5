@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 11:34:36 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 18:32:43 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 21:42:21 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static int	parse_md_stdin(t_ssl_checksum *c)
 	file->fd = 0;
 	file->file_name = NULL;
 	file->data = ft_dstr_release(s);
+	file->e.no = 1;
 	ft_queue_enqueue(c->files, file);
 	return (file->e.no);
 }
@@ -52,16 +53,19 @@ static int		parse_md_file(t_ssl_checksum *c, char **data, int i)
 	if ((file->fd = open(data[i],O_DIRECTORY)) >= 0)
 	{
 		close(file->fd);
-		return (ft_ssl_new_error(&(file->e), DIRECTORY, data[i]));
+		ft_ssl_new_error(&(file->e), DIRECTORY, data[i]);
 	}
 	else if ((file->fd = open(data[i], O_RDONLY)) < 0)
-		return (ft_ssl_new_error(&(file->e), INV_FILE, data[i]));
-	s = ft_dstr_init();
-	while ((size = read(file->fd, read_buf, READ_BUF_SIZE)) > 0)
-		ft_dstr_add(s, read_buf, size);
+		ft_ssl_new_error(&(file->e), INV_FILE, data[i]);
+	else
+	{
+		s = ft_dstr_init();
+		while ((size = read(file->fd, read_buf, READ_BUF_SIZE)) > 0)
+			ft_dstr_add(s, read_buf, size);
+		file->data = ft_dstr_release(s);
+		file->e.no = 1;
+	}
 	file->file_name = data[i];
-	file->data = ft_dstr_release(s);
-	file->e.no = 1;
 	ft_queue_enqueue(c->files, file);
 	return (file->e.no);
 }
@@ -70,16 +74,16 @@ static int	parse_md_string(t_ssl_checksum *c, char **data, int len, int *i)
 {
 	t_ssl_file	*file;
 
-	if (*i < len)
+	if (*i >= len)
 		return (c->e.no = MISSING_ARG);
 	if (!(file = malloc(sizeof(*file))))
 		return (c->e.no = SYS_ERROR);
 	file->fd = 0;
 	file->file_name = NULL;
-	file->data = data[(*i)++];
+	file->data = ft_strdup(data[(*i)++]);
 	file->e.no = 1;
 	ft_queue_enqueue(c->files, file);
-	if (*i < len && ft_strcmp("-s", data[*i]) != 0)
+	if ((*i < len && ft_strcmp("-s", data[*i]) != 0) || *i >= len)
 		c->options &= ~_S;
 	else if (*i < len)
 		(*i)++;
@@ -99,8 +103,9 @@ static int	parse_md_options(t_ssl_checksum *c, char **data, int len, int *i)
 		(*i)++;
 		if ((c->options & _S) == _S)
 		{
-			while ((c->options &_S) == _S)
-				parse_md_string(c, data, len, i);
+			while (((c->options & _S) == _S) 
+					&& parse_md_string(c, data, len, i) >= 0)
+				;
 			return (c->e.no = 1);
 		}
 	}

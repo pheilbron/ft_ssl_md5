@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 18:07:03 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 21:53:47 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,12 @@ int				ft_ssl_prep_4b_big_end(uint32_t **prepped_data, char *data,
 		uint64_t len);
 int				ft_ssl_prep_8b_big_end(uint64_t **prepped_data, char *data,
 		uint64_t len);
-uint32_t	u32_le_to_u32_be(uint32_t data);
 
 void			ft_ssl_process_and_print(t_ssl_checksum *chk);
 
 int				print_usage(t_ssl_checksum chk);
 int				print_fatal_error(t_ssl_checksum chk);
-void			print_non_fatal_error(t_ssl_file *file);
+void			print_non_fatal_error(t_ssl_file *file, char *algorithm_name);
 void			set_ssl_error(t_ssl_file *file, char *algorithm_name,
 		t_error e);
 void			ft_ssl_error_init(t_error *e);

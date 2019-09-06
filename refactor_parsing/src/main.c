@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/07 19:38:59 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 19:41:10 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 20:06:21 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static t_ssl_checksum    *init_checksum(void)
 		free(ret);
 		return (NULL);
 	}
+	ret->options = 0;
 	return (ret);
 }
 
@@ -43,6 +44,6 @@ int						main(int ac, char **av)
 	}
 	else
 		ft_printf("\n");
-	system("leaks ft_ssl");
+//	system("leaks ft_ssl");
 	return (0);
 }

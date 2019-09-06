@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/01 13:57:58 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 18:47:00 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 21:49:34 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,25 @@ char	*u32_to_u8_be(uint32_t *hash, uint8_t len)
 void    ft_ssl_md_print(t_ssl_file *file, t_ssl_checksum *c, int first)
 {
 	char    *print_hash;
-	uint8_t i;
 	char    *name;
 
 	if ((print_hash = u32_to_u8_be(file->hash, c->algorithm.hash_len)))
 	{
-		i = 0;
 		if (first && (c->options & _P) == _P)
-			ft_printf("%s\n%s\n", file->file_name, print_hash);
+			ft_printf("%s%s\n", file->data, print_hash);
 		else if ((c->options & _Q) == _Q)
 			ft_printf("%s\n", print_hash);
 		else if ((c->options & _R) == _R)
-			ft_printf("%s %s\n", print_hash, file->file_name);
+			ft_printf("%s %s%s%s\n", print_hash, file->file_name ? "" : "\"",
+					(file->file_name ? file->file_name : file->data),
+					file->file_name ? "" : "\"");
 		else
 		{
-			ft_printf("%s (%s) = %s\n",
-					(name = ft_str_capitalize(c->algorithm.name)) ?
-					name : c->algorithm.name, file->file_name, print_hash);
+			ft_printf("%s (%s%s%s) = %s\n",
+					(name = ft_str_capitalize(c->algorithm.name)) ? name :
+					c->algorithm.name, file->file_name ? "" : "\"",
+					file->file_name ? file->file_name : file->data,
+					file->file_name ? "" : "\"", print_hash);
 			if (name)
 				free(name);
 		}
@@ -70,7 +72,7 @@ void	ft_ssl_process_and_print(t_ssl_checksum *chk)
 	{
 		file = (t_ssl_file *)(ft_queue_dequeue(chk->files));
 		if (file->e.no < 0)
-			print_non_fatal_error(file);
+			print_non_fatal_error(file, chk->algorithm.name);
 		else if ((file->hash =
 					malloc(sizeof(*(file->hash)) * chk->algorithm.hash_len)))
 		{

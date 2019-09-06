@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 18:11:20 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 21:50:03 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,6 @@ void			ft_ssl_md5(char *data, uint32_t **hash)
 		set_block(&chunk);
 		chunk.pos += 16;
 	}
-	set_4b_file_hash(chunk.hash, hash, 4);
+	set_4b_le_file_hash(chunk.hash, hash, 4);
 	free(chunk.data);
 }

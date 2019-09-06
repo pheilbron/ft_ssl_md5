@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 18:22:38 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/05 19:52:53 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,24 @@ int			print_fatal_error(t_ssl_checksum chk)
 	return (0);
 }
 
-void		print_non_fatal_error(t_ssl_file *file)
+void		print_non_fatal_error(t_ssl_file *file, char *algorithm_name)
 {
-	if (file->fd == -1)
-		ft_printf("%s\n", file->data);
+	t_dstring	*s;
+
+	file->fd = PARSE_ERROR;
+	s = ft_dstr_init();
+	if (file->e.no == INV_FILE || file->e.no == DIRECTORY)
+		ft_dstr_addf(s, "ft_ssl: %s: %s: %s", algorithm_name,
+				file->e.data, (file->e.no == INV_FILE ?
+					"No such file or directory" : "Is a directory"));
+	else if (file->e.no == MISSING_ARG)
+		ft_dstr_addf(s, "ft_ssl: %s: option requires an argument -- s",
+				algorithm_name);
+	if (file->e.no == INV_FILE || file->e.no == DIRECTORY ||
+			file->e.no == MISSING_ARG)
+		ft_printf("%s\n", (file->data = ft_dstr_release(s)));
+	else
+		file->fd = NO_DATA_MALLOC;
 }
 
 void		set_ssl_error(t_ssl_file *file, char *algorithm_name, t_error e)
