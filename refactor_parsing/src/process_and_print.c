@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/01 13:57:58 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 21:49:34 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/06 10:29:19 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ char	*u32_to_u8_be(uint32_t *hash, uint8_t len)
 	return (ft_dstr_release(ret));
 }
 
-void    ft_ssl_md_print(t_ssl_file *file, t_ssl_checksum *c, int first)
+void    ft_ssl_md_print(t_ssl_file *file, t_ssl_checksum *c)
 {
 	char    *print_hash;
 	char    *name;
 
 	if ((print_hash = u32_to_u8_be(file->hash, c->algorithm.hash_len)))
 	{
-		if (first && (c->options & _P) == _P)
+		if ((file->flag & _P) == _P)
 			ft_printf("%s%s\n", file->data, print_hash);
 		else if ((c->options & _Q) == _Q)
 			ft_printf("%s\n", print_hash);
@@ -65,9 +65,7 @@ void    ft_ssl_md_print(t_ssl_file *file, t_ssl_checksum *c, int first)
 void	ft_ssl_process_and_print(t_ssl_checksum *chk)
 {
 	t_ssl_file	*file;
-	int			first;
 
-	first = 1;
 	while (!ft_queue_is_empty(chk->files))
 	{
 		file = (t_ssl_file *)(ft_queue_dequeue(chk->files));
@@ -77,8 +75,7 @@ void	ft_ssl_process_and_print(t_ssl_checksum *chk)
 					malloc(sizeof(*(file->hash)) * chk->algorithm.hash_len)))
 		{
 			(*(chk->algorithm.f))(file->data, &(file->hash));
-			(*(chk->algorithm.print))(file, chk, first);
-			first = 0;
+			(*(chk->algorithm.print))(file, chk);
 		}
 		ft_ssl_free_file(file);
 	}

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 19:52:53 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/06 10:39:33 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,8 @@ void		print_non_fatal_error(t_ssl_file *file, char *algorithm_name)
 				algorithm_name);
 	if (file->e.no == INV_FILE || file->e.no == DIRECTORY ||
 			file->e.no == MISSING_ARG)
-		ft_printf("%s\n", (file->data = ft_dstr_release(s)));
-	else
-		file->fd = NO_DATA_MALLOC;
+		ft_printf("%s\n", s->buf);
+	ft_dstr_free(s);
 }
 
 void		set_ssl_error(t_ssl_file *file, char *algorithm_name, t_error e)

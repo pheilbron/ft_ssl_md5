@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 11:34:36 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 21:42:21 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/06 10:41:07 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ static int	parse_md_stdin(t_ssl_checksum *c)
 	file->file_name = NULL;
 	file->data = ft_dstr_release(s);
 	file->e.no = 1;
-	ft_queue_enqueue(c->files, file);
+	file->flag = c->options | _P;
+	ft_queue_push(c->files, file);
 	return (file->e.no);
 }
 
@@ -66,6 +67,7 @@ static int		parse_md_file(t_ssl_checksum *c, char **data, int i)
 		file->e.no = 1;
 	}
 	file->file_name = data[i];
+	file->flag = c->options & ~_P & ~_S;
 	ft_queue_enqueue(c->files, file);
 	return (file->e.no);
 }
@@ -80,7 +82,8 @@ static int	parse_md_string(t_ssl_checksum *c, char **data, int len, int *i)
 		return (c->e.no = SYS_ERROR);
 	file->fd = 0;
 	file->file_name = NULL;
-	file->data = ft_strdup(data[(*i)++]);
+	file->data = data[(*i)++];
+	file->flag = (c->options & ~_P) | _S;
 	file->e.no = 1;
 	ft_queue_enqueue(c->files, file);
 	if ((*i < len && ft_strcmp("-s", data[*i]) != 0) || *i >= len)

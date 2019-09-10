@@ -6,7 +6,7 @@
 #    By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/29 17:20:30 by pheilbro          #+#    #+#              #
-#    Updated: 2019/09/05 18:45:52 by pheilbro         ###   ########.fr        #
+#    Updated: 2019/09/06 10:36:11 by pheilbro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,14 +36,14 @@ OBJ			= $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
 all: $(NAME)
 
 $(NAME): $(OBJ) ../../libft/libft.a
-	@$(CC) $(CFLAGS) $(DEBUG_FLAGS) $(LIB) -o $@ $^
+	@$(CC) $(CFLAGS) $(LIB) -o $@ $^
 
 ../../libft/libft.a:
 	@make -sC libft
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c 
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) $(DEBUG_FLAGS) $(INC_FLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(INC_FLAGS) -c $< -o $@
 
 test_md5:
 	gcc $(DEBUG_FLAGS) -I inc -I ../libft/inc -L ../libft -lft test_md5.c src/algorithms/ft_ssl_md5.c src/algorithms/ft_ssl_message_digest.c src/prep_data.c

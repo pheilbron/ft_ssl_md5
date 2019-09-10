@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 16:23:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 21:54:08 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/06 09:52:55 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ void		set_4b_le_file_hash(uint32_t *hash, uint32_t **file_hash,
 void		set_8b_to_4b_file_hash(uint64_t *hash, uint32_t **file_hash,
 		uint8_t len);
 
-void		ft_ssl_md_print(t_ssl_file *file, t_ssl_checksum *c, int first);
+void		ft_ssl_md_print(t_ssl_file *file, t_ssl_checksum *c);
 
 #endif
